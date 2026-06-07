@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Japan · Family Hotels</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:      #0e0e0e;
+  --surface: #161616;
+  --raised:  #1e1e1e;
+  --border:  #2a2a2a;
+  --border2: #3a3a3a;
+  --ink:     #efefef;
+  --muted:   #777;
+  --dim:     #333;
+  --orange:  #ff5a1f;
+  --teal:    #00c4a0;
+  --purple:  #a78bfa;
+  --gold:    #e8b84b;
+  --green:   #4ade80;
+  --pink:    #f472b6;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* ── Nav ── */
+.nav {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+.nav-link {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+  padding: 14px 16px;
+  border-bottom: 2px solid transparent;
+  transition: all .15s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.nav-link:hover { color: var(--ink); }
+.nav-link.active { color: var(--orange); border-bottom-color: var(--orange); }
+
+/* ── Hero ── */
+.hero {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 36px 28px 28px;
+}
+.hero-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--teal);
+  margin-bottom: 8px;
+}
+.hero-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(48px, 11vw, 96px);
+  line-height: 0.92;
+  color: var(--ink);
+}
+.hero-title .outline {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--teal);
+}
+.hero-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 14px;
+}
+.chip {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 99px;
+  padding: 3px 10px;
+  background: var(--raised);
+}
+.chip b { color: var(--ink); font-weight: 500; }
+
+/* ── Layout ── */
+.page-body { display: flex; align-items: flex-start; }
+
+/* ── Sidebar ── */
+.sidebar {
+  width: 290px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--border);
+  background: var(--surface);
+  padding: 18px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: sticky;
+  top: 0;
+  max-height: 100vh;
+  overflow-y: auto;
+}
+@media (max-width: 680px) {
+  .page-body { flex-direction: column; }
+  .sidebar { width: 100%; position: static; max-height: none; border-right: none; border-bottom: 1px solid var(--border); }
+}
+
+.sec-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.sec-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+/* ── Check-in date picker ── */
+.date-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+}
+.dpill {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--raised);
+  padding: 7px 6px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color .15s, background .15s;
+  user-select: none;
+}
+.dpill:hover { border-color: var(--border2); }
+.dpill.sel { border-color: var(--teal); background: rgba(0,196,160,.08); }
+.dp-dow { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+.dpill.sel .dp-dow { color: var(--teal); }
+.dp-date { font-size: 12px; font-weight: 500; margin-top: 1px; }
+
+/* ── Amenity toggles ── */
+.amenity-list { display: flex; flex-direction: column; gap: 5px; }
+.amenity-tog {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--raised);
+  cursor: pointer;
+  transition: all .15s;
+  user-select: none;
+}
+.amenity-tog:hover { border-color: var(--border2); }
+.amenity-tog.on { border-color: var(--purple); background: rgba(167,139,250,.07); }
+.amenity-icon { font-size: 18px; flex-shrink: 0; }
+.amenity-body { flex: 1; }
+.amenity-name { font-size: 13px; font-weight: 500; }
+.amenity-desc { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); margin-top: 1px; }
+.amenity-chk {
+  width: 16px; height: 16px;
+  border: 2px solid var(--border2);
+  border-radius: 3px;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px;
+  transition: all .15s;
+}
+.amenity-tog.on .amenity-chk { background: var(--purple); border-color: var(--purple); color: #000; }
+.amenity-tog.on .amenity-chk::after { content: '✓'; }
+
+/* ── Search engines ── */
+.engine-list { display: flex; flex-direction: column; gap: 4px; }
+.etog {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px;
+  background: var(--raised); cursor: pointer;
+  transition: border-color .15s, background .15s; user-select: none;
+}
+.etog:hover { border-color: var(--border2); }
+.etog.on { border-color: var(--teal); background: rgba(0,196,160,.07); }
+.etog-icon { width: 20px; text-align: center; font-size: 14px; flex-shrink: 0; }
+.etog-name { font-size: 12px; font-weight: 500; flex: 1; }
+.etog-sub  { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--muted); }
+.sw {
+  width: 28px; height: 16px; border-radius: 8px; background: var(--dim);
+  position: relative; flex-shrink: 0; transition: background .2s;
+}
+.sw::after {
+  content: ''; position: absolute; top: 2px; left: 2px;
+  width: 12px; height: 12px; border-radius: 50%; background: var(--muted);
+  transition: transform .2s, background .2s;
+}
+.etog.on .sw { background: var(--teal); }
+.etog.on .sw::after { transform: translateX(12px); background: #fff; }
+
+/* ── City blocks ── */
+.city-blocks { display: flex; flex-direction: column; gap: 8px; }
+
+.city-block {
+  background: var(--raised);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.city-block.dragging { opacity: .5; border-style: dashed; }
+
+.cb-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  cursor: grab;
+}
+.cb-handle {
+  color: var(--dim);
+  font-size: 14px;
+  cursor: grab;
+  flex-shrink: 0;
+  line-height: 1;
+}
+.cb-city-name {
+  font-size: 13px;
+  font-weight: 500;
+  flex: 1;
+}
+.cb-nights-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  background: var(--dim);
+  color: var(--muted);
+  padding: 2px 8px;
+  border-radius: 3px;
+}
+.cb-nights-badge.has-nights { background: rgba(0,196,160,.12); color: var(--teal); }
+
+.cb-remove {
+  background: none;
+  border: none;
+  color: var(--dim);
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  padding: 2px 4px;
+  transition: color .15s;
+  flex-shrink: 0;
+}
+.cb-remove:hover { color: var(--orange); }
+
+.cb-body { padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; }
+
+.cb-nights-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.cb-nights-label { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); white-space: nowrap; }
+.cb-nights-val {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  line-height: 1;
+  color: var(--teal);
+  min-width: 28px;
+}
+
+input[type=range] {
+  width: 100%; appearance: none; height: 3px;
+  background: var(--dim); border-radius: 3px; outline: none; cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  appearance: none; width: 18px; height: 18px; border-radius: 50%;
+  background: var(--teal); border: 3px solid var(--bg); box-shadow: 0 0 0 1px var(--teal);
+}
+
+/* Add city button */
+.add-city-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.add-city-btn {
+  background: var(--raised);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--muted);
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: all .15s;
+  text-transform: uppercase;
+}
+.add-city-btn:hover { border-color: var(--teal); color: var(--teal); }
+
+/* Trip summary */
+.trip-summary {
+  background: var(--raised);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  line-height: 1.7;
+  color: var(--muted);
+}
+.trip-summary .ts-total { color: var(--teal); font-size: 11px; }
+.trip-summary .ts-warning { color: var(--gold); }
+
+/* Go button */
+.go-btn {
+  width: 100%; background: var(--teal); color: #000;
+  border: none; font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px; letter-spacing: 2px; padding: 14px 16px;
+  border-radius: 7px; cursor: pointer; transition: background .15s, transform .15s;
+}
+.go-btn:hover { background: #00e0b8; transform: translateY(-1px); }
+.go-btn:active { transform: translateY(0); }
+.go-sub {
+  display: block; font-family: 'DM Mono', monospace; font-size: 10px;
+  font-weight: 400; letter-spacing: 1px; color: rgba(0,0,0,0.5); margin-top: 2px;
+}
+
+/* ── Results ── */
+.results { flex: 1; min-width: 0; padding: 20px 20px 60px; }
+
+.empty { padding: 70px 20px; text-align: center; color: var(--muted); }
+.empty-icon { font-size: 44px; margin-bottom: 10px; }
+.empty-title { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 2px; color: var(--dim); margin-bottom: 6px; }
+.empty-hint { font-family: 'DM Mono', monospace; font-size: 11px; line-height: 1.7; max-width: 340px; margin: 0 auto; }
+
+/* City result group */
+.city-group {
+  margin-bottom: 32px;
+}
+.city-group-header {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+}
+.cgh-number {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 13px;
+  color: var(--muted);
+  letter-spacing: 2px;
+}
+.cgh-city {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 26px;
+  letter-spacing: 1px;
+  color: var(--ink);
+  line-height: 1;
+}
+.cgh-nights {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--teal);
+}
+.cgh-checkin {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  margin-left: auto;
+}
+.cgh-amenities {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+.amenity-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  letter-spacing: 1px;
+}
+.tag-pool  { background: rgba(59,130,246,.15); color: #60a5fa; }
+.tag-onsen { background: rgba(244,114,182,.15); color: var(--pink); }
+
+/* Result rows */
+.rrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--border);
+}
+.rrow:last-child { border-bottom: none; }
+.rrow-icon { width: 24px; text-align: center; font-size: 15px; flex-shrink: 0; }
+.rrow-body { flex: 1; min-width: 0; }
+.rrow-top { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 2px; }
+.badge {
+  font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 1px;
+  padding: 2px 6px; border-radius: 3px; text-transform: uppercase;
+}
+.b-eng   { background: var(--dim); color: var(--muted); }
+.b-best  { background: rgba(74,222,128,.12); color: var(--green); }
+.b-cheap { background: rgba(232,184,75,.12); color: var(--gold); }
+.rrow-name { font-size: 14px; font-weight: 500; }
+.rrow-meta { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); margin-top: 2px; }
+
+.open-btn {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: var(--raised); border: 1px solid var(--border); color: var(--ink);
+  text-decoration: none; font-family: 'DM Mono', monospace; font-size: 10px;
+  letter-spacing: 1px; padding: 7px 11px; border-radius: 6px;
+  white-space: nowrap; flex-shrink: 0; transition: all .15s;
+}
+.open-btn:hover { background: var(--teal); border-color: var(--teal); color: #000; }
+
+/* Checkin flow note */
+.checkin-note {
+  background: rgba(0,196,160,.06);
+  border: 1px solid rgba(0,196,160,.2);
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--teal);
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+/* Sort tabs */
+.sort-row {
+  display: flex; align-items: center; gap: 6px; margin-bottom: 14px; flex-wrap: wrap;
+}
+.sort-lbl { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); letter-spacing: 1px; }
+.stab {
+  font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 1px; text-transform: uppercase;
+  padding: 4px 10px; border: 1px solid var(--border); border-radius: 4px;
+  color: var(--muted); background: none; cursor: pointer; transition: all .15s;
+}
+.stab:hover { color: var(--ink); border-color: var(--border2); }
+.stab.active { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.result-count { margin-left: auto; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<div class="nav">
+  <a class="nav-link" href="index.html">✈ Flights</a>
+  <a class="nav-link active" href="hotels.html">🏨 Hotels</a>
+  <a class="nav-link" href="activities.html">🎡 Activities</a>
+</div>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-tag">🏨 Family Hotel Finder · Japan</div>
+  <div class="hero-title">JAPAN<br><span class="outline">HOTELS</span></div>
+  <div class="hero-chips">
+    <div class="chip">👨‍👩‍👧‍👦 2 Adults · 2 Children <b>(11 &amp; 7)</b></div>
+    <div class="chip">🛏 <b>1 Room</b></div>
+    <div class="chip">📅 Around <b>27 Mar 2027</b></div>
+    <div class="chip">💷 <b>Budget · Best first</b></div>
+  </div>
+</div>
+
+<!-- Page body -->
+<div class="page-body">
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+
+    <!-- Check-in date -->
+    <div>
+      <div class="sec-label">Trip Start Date</div>
+      <div class="date-grid" id="checkinGrid"></div>
+    </div>
+
+    <!-- City blocks -->
+    <div>
+      <div class="sec-label">City Itinerary</div>
+      <div class="city-blocks" id="cityBlocks"></div>
+
+      <!-- Add city buttons -->
+      <div class="add-city-row" id="addCityRow" style="margin-top:8px;"></div>
+
+      <!-- Trip summary -->
+      <div class="trip-summary" id="tripSummary" style="margin-top:10px;">
+        Add cities above to build your itinerary
+      </div>
+    </div>
+
+    <!-- Amenity filters -->
+    <div>
+      <div class="sec-label">Must-Have Amenities</div>
+      <div class="amenity-list">
+        <div class="amenity-tog" id="tog-pool" onclick="toggleAmenity('pool',this)">
+          <div class="amenity-icon">🏊</div>
+          <div class="amenity-body">
+            <div class="amenity-name">Swimming Pool</div>
+            <div class="amenity-desc">Hotel has a pool</div>
+          </div>
+          <div class="amenity-chk"></div>
+        </div>
+        <div class="amenity-tog" id="tog-onsen" onclick="toggleAmenity('onsen',this)">
+          <div class="amenity-icon">♨️</div>
+          <div class="amenity-body">
+            <div class="amenity-name">Onsen / Hot Spring Spa</div>
+            <div class="amenity-desc">Traditional Japanese bathing</div>
+          </div>
+          <div class="amenity-chk"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Search engines -->
+    <div>
+      <div class="sec-label">Search Engines</div>
+      <div class="engine-list" id="engineList"></div>
+    </div>
+
+    <!-- Go -->
+    <button class="go-btn" onclick="go()">
+      SEARCH HOTELS
+      <span class="go-sub" id="goSub">add cities above</span>
+    </button>
+
+  </div><!-- /sidebar -->
+
+  <!-- Results -->
+  <div class="results" id="results">
+    <div class="empty">
+      <div class="empty-icon">🏯</div>
+      <div class="empty-title">Build Your Itinerary</div>
+      <div class="empty-hint">
+        Set your trip start date, add cities in order, set nights per city — then hit Search Hotels.<br><br>
+        Results appear per city with direct links to each search engine, sorted cheapest first.
+      </div>
+    </div>
+  </div>
+
+</div><!-- /page-body -->
+
+<script>
+// ── City data ─────────────────────────────────────────────
+const CITIES = [
+  { id:'tokyo',    name:'Tokyo',           region:'Kantō',   icon:'🗼', searchName:'Tokyo'       },
+  { id:'ueno',     name:'Tokyo · Ueno',    region:'Kantō',   icon:'🎨', searchName:'Ueno Tokyo'  },
+  { id:'osaka',    name:'Osaka',           region:'Kansai',  icon:'🏯', searchName:'Osaka'       },
+  { id:'kyoto',    name:'Kyoto',           region:'Kansai',  icon:'⛩️', searchName:'Kyoto'       },
+  { id:'fuji',     name:'Mt Fuji / Hakone',region:'Kantō',   icon:'🗻', searchName:'Hakone'      },
+  { id:'onsen',    name:'Onsen · Beppu',   region:'Kyushu',  icon:'♨️', searchName:'Beppu'       },
+  { id:'nagano',   name:'Nagano',          region:'Chūbu',   icon:'🎿', searchName:'Nagano'      },
+  { id:'nara',     name:'Nara',            region:'Kansai',  icon:'🦌', searchName:'Nara'        },
+  { id:'hiroshima',name:'Hiroshima',       region:'Chūgoku', icon:'☮️', searchName:'Hiroshima'   },
+  { id:'sapporo',  name:'Sapporo',         region:'Hokkaidō',icon:'❄️', searchName:'Sapporo'     },
+];
+
+// ── Hotel search engines ──────────────────────────────────
+const ENGINES = [
+  // ── FULLY PRE-POPULATED — verified working ────────────────────────────────
+  { id:'booking', name:'Booking.com', icon:'🔵',
+    status:'full',
+    sub:'Destination · dates · 2 adults · 2 children (11,7) · price sorted',
+    info:'Largest hotel inventory worldwide. Strong for Japan — lists most ryokan (traditional inns) and business hotels. Free cancellation filter is very useful. Prices include taxes.',
+    on:true,
+    url:(city, cin, cout, amenities) => {
+      let q = city.searchName + ', Japan';
+      if (amenities.onsen) q += ' onsen';
+      let url = `https://www.booking.com/searchresults.en-gb.html?ss=${encodeURIComponent(q)}&checkin=${cin}&checkout=${cout}&group_adults=2&group_children=2&age=11&age=7&no_rooms=1&order=price`;
+      if (amenities.pool) url += '&nflt=hotelfacility%3D46';
+      return url;
+    }
+  },
+  { id:'google', name:'Google Hotels', icon:'🔍',
+    status:'manual',
+    sub:'Opens search — enter dates on site',
+    info:'Aggregates prices from Booking.com, Expedia and direct hotel sites in one view. Great for spotting when a hotel\'s own website is cheaper. Use the price graph to check if your dates are unusually expensive.',
+    on:true,
+    url:(city, cin, cout, amenities) => {
+      let q = `hotels in ${city.searchName} Japan`;
+      if (amenities.pool)  q += ' with pool';
+      if (amenities.onsen) q += ' with onsen';
+      return `https://www.google.com/travel/hotels?q=${encodeURIComponent(q)}&checkin_date=${cin}&checkout_date=${cout}&num_adults=2&num_children=2&children_ages=11%2C7`;
+    }
+  },
+  { id:'expedia', name:'Expedia', icon:'🏷',
+    status:'manual',
+    sub:'Opens correct city — enter dates on site',
+    info:'Uses verified region IDs for each Japanese city so destination pre-fills correctly. Best for bundling hotel + flight. Also worth checking for Members-only discounts.',
+    on:false,
+    url:(city, cin, cout, amenities) => {
+      const regionIds = {
+        'Tokyo':179900, 'Ueno Tokyo':179900, 'Osaka':179897,
+        'Kyoto':6131486, 'Hakone':6128315, 'Beppu':6402,
+        'Nagano':6127975, 'Nara':6139567, 'Hiroshima':6128225, 'Sapporo':6054145,
+      };
+      const rid = regionIds[city.searchName] || 179900;
+      let url = `https://www.expedia.co.uk/Hotel-Search?regionId=${rid}&startDate=${cin}&endDate=${cout}&adults=2&children=2&childrenAges=11%2C7&rooms=1&sort=PRICE_LOW_TO_HIGH`;
+      return url;
+    }
+  },
+
+  // ── DESTINATION ONLY — dates not supported via URL ────────────────────────
+  { id:'kayak', name:'Kayak Hotels', icon:'🛶',
+    status:'manual',
+    sub:'Opens correct city page — enter dates on site',
+    info:'Good for comparing prices across OTAs side by side with a price history graph. Kayak\'s hotel pages are entirely JS-rendered and do not accept date params via URL — enter dates once you land.',
+    on:true,
+    url:(city, cin, cout, amenities) => {
+      const slugs = {
+        'Tokyo':'Tokyo-Hotels.21033', 'Ueno Tokyo':'Tokyo-Hotels.21033',
+        'Osaka':'Osaka-Hotels.25901', 'Kyoto':'Kyoto-Hotels.20339',
+        'Hakone':'Hakone-Hotels.43961', 'Beppu':'Beppu-Hotels.80709',
+        'Nagano':'Nagano-Hotels.21222', 'Nara':'Nara-Hotels.46432',
+        'Hiroshima':'Hiroshima-Hotels.13675', 'Sapporo':'Sapporo-Hotels.36215',
+      };
+      const slug = slugs[city.searchName] || 'Tokyo-Hotels.21033';
+      return `https://www.kayak.co.uk/${slug}.hotel.ksp?sort=price_a`;
+    }
+  },
+  { id:'agoda', name:'Agoda', icon:'🟠',
+    status:'manual',
+    sub:'Opens correct city page — enter dates on site',
+    info:'Particularly strong in Japan and Asia — often has exclusive rates not listed elsewhere, especially for smaller ryokan and boutique hotels. Worth always checking manually. Their app sometimes shows lower prices than the website.',
+    on:false,
+    url:(city, cin, cout, amenities) => {
+      const slugs = {
+        'Tokyo':'tokyo-jp', 'Ueno Tokyo':'tokyo-jp', 'Osaka':'osaka-jp',
+        'Kyoto':'kyoto-jp', 'Hakone':'hakone-jp', 'Beppu':'beppu-jp',
+        'Nagano':'nagano-jp', 'Nara':'nara-jp', 'Hiroshima':'hiroshima-jp', 'Sapporo':'sapporo-jp'
+      };
+      const slug = slugs[city.searchName] || 'tokyo-jp';
+      return `https://www.agoda.com/en-gb/city/${slug}.html`;
+    }
+  },
+  { id:'hotels', name:'Hotels.com', icon:'🏨',
+    status:'manual',
+    sub:'Opens destination search — enter dates on site',
+    info:'Worth checking if you collect Hotels.com reward nights (10 nights = 1 free night). Owned by Expedia so inventory is similar, but the loyalty benefit makes it worthwhile for frequent travellers.',
+    on:false,
+    url:(city, cin, cout, amenities) => {
+      return `https://uk.hotels.com/search.do?q-destination=${encodeURIComponent(city.searchName + ', Japan')}&sort-order=PRICE`;
+    }
+  },
+  { id:'tripadvisor', name:'TripAdvisor', icon:'🦉',
+    status:'manual',
+    sub:'Opens hotel search — use for reviews, enter dates on site',
+    info:'Don\'t use for price — use for research. Japan family hotel reviews on TripAdvisor are thorough and often highlight child-friendliness, pool quality and onsen etiquette. Cross-reference your shortlist here before booking.',
+    on:false,
+    url:(city, cin, cout, amenities) => {
+      return `https://www.tripadvisor.co.uk/Search?q=${encodeURIComponent(city.searchName + ' Japan hotel')}`;
+    }
+  },
+];
+
+// ── Check-in dates ────────────────────────────────────────
+const DATES = [
+  {iso:'2027-03-25',dow:'Thu',d:'25 Mar'},
+  {iso:'2027-03-26',dow:'Fri',d:'26 Mar'},
+  {iso:'2027-03-27',dow:'Sat',d:'27 Mar'},
+  {iso:'2027-03-28',dow:'Sun',d:'28 Mar'},
+  {iso:'2027-03-29',dow:'Mon',d:'29 Mar'},
+  {iso:'2027-03-30',dow:'Tue',d:'30 Mar'},
+  {iso:'2027-03-31',dow:'Wed',d:'31 Mar'},
+  {iso:'2027-04-01',dow:'Thu',d:'1 Apr'},
+  {iso:'2027-04-02',dow:'Fri',d:'2 Apr'},
+];
+
+// ── State ─────────────────────────────────────────────────
+let checkinDate  = '2027-03-30';
+let cityBlocks   = []; // [{cityId, nights}]
+let amenities    = { pool: false, onsen: false };
+let blockCounter = 0;
+
+// ── Helpers ───────────────────────────────────────────────
+function addDays(iso, n) {
+  const d = new Date(iso + 'T12:00:00Z');
+  d.setUTCDate(d.getUTCDate() + n);
+  return d.toISOString().slice(0,10);
+}
+
+function pretty(iso) {
+  const d = new Date(iso + 'T12:00:00Z');
+  const days  = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const months= ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return `${days[d.getUTCDay()]} ${d.getUTCDate()} ${months[d.getUTCMonth()]}`;
+}
+
+function cityById(id) { return CITIES.find(c => c.id === id); }
+
+// ── Render check-in pills ─────────────────────────────────
+function renderCheckin() {
+  const g = document.getElementById('checkinGrid');
+  g.innerHTML = '';
+  DATES.forEach(d => {
+    const el = document.createElement('div');
+    el.className = 'dpill' + (checkinDate === d.iso ? ' sel' : '');
+    el.innerHTML = `<div class="dp-dow">${d.dow}</div><div class="dp-date">${d.d}</div>`;
+    el.onclick = () => { checkinDate = d.iso; renderCheckin(); updateSummary(); };
+    g.appendChild(el);
+  });
+}
+
+// ── Render city blocks ────────────────────────────────────
+function renderCityBlocks() {
+  const container = document.getElementById('cityBlocks');
+  container.innerHTML = '';
+
+  cityBlocks.forEach((block, idx) => {
+    const city = cityById(block.cityId);
+    const div = document.createElement('div');
+    div.className = 'city-block';
+    div.dataset.idx = idx;
+    div.innerHTML = `
+      <div class="cb-header">
+        <span class="cb-handle" title="Drag to reorder">⠿</span>
+        <span class="cb-city-name">${city.icon} ${city.name}</span>
+        <span class="cb-nights-badge ${block.nights > 0 ? 'has-nights' : ''}">${block.nights}n</span>
+        <button class="cb-remove" onclick="removeBlock(${idx})" title="Remove">×</button>
+      </div>
+      <div class="cb-body">
+        <div class="cb-nights-row">
+          <span class="cb-nights-val" id="nv-${idx}">${block.nights}</span>
+          <span class="cb-nights-label">nights</span>
+        </div>
+        <input type="range" min="1" max="14" value="${block.nights}"
+          oninput="updateBlockNights(${idx}, this.value)">
+        <div style="display:flex;justify-content:space-between;font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);margin-top:2px">
+          <span>1n</span><span>14n</span>
+        </div>
+      </div>
+    `;
+    container.appendChild(div);
+  });
+
+  updateSummary();
+  updateGoSub();
+}
+
+function updateBlockNights(idx, val) {
+  cityBlocks[idx].nights = parseInt(val);
+  const nv = document.getElementById(`nv-${idx}`);
+  if (nv) nv.textContent = val;
+  const badge = document.querySelector(`[data-idx="${idx}"] .cb-nights-badge`);
+  if (badge) {
+    badge.textContent = val + 'n';
+    badge.className = 'cb-nights-badge has-nights';
+  }
+  updateSummary();
+  updateGoSub();
+}
+
+function removeBlock(idx) {
+  cityBlocks.splice(idx, 1);
+  renderCityBlocks();
+}
+
+// ── Add city ──────────────────────────────────────────────
+function addCity(cityId) {
+  cityBlocks.push({ cityId, nights: 3 });
+  renderCityBlocks();
+}
+
+function renderAddButtons() {
+  const row = document.getElementById('addCityRow');
+  row.innerHTML = '';
+  CITIES.forEach(c => {
+    const btn = document.createElement('button');
+    btn.className = 'add-city-btn';
+    btn.textContent = `+ ${c.icon} ${c.name}`;
+    btn.onclick = () => addCity(c.id);
+    row.appendChild(btn);
+  });
+}
+
+// ── Amenity toggles ───────────────────────────────────────
+function toggleAmenity(key, el) {
+  amenities[key] = !amenities[key];
+  el.classList.toggle('on', amenities[key]);
+  updateGoSub();
+}
+
+// ── Render engines ────────────────────────────────────────
+function renderEngines() {
+  const g = document.getElementById('engineList');
+  g.innerHTML = '';
+  ENGINES.forEach(e => {
+    const el = document.createElement('div');
+    el.className = 'etog' + (e.on ? ' on' : '');
+    const badge = e.status === 'full'
+      ? `<span style="font-family:'DM Mono',monospace;font-size:8px;background:rgba(74,222,128,.12);color:#4ade80;border:1px solid rgba(74,222,128,.25);border-radius:3px;padding:1px 5px;letter-spacing:1px;white-space:nowrap">✓ AUTO-FILL</span>`
+      : `<span style="font-family:'DM Mono',monospace;font-size:8px;background:rgba(232,184,75,.1);color:var(--gold);border:1px solid rgba(232,184,75,.25);border-radius:3px;padding:1px 5px;letter-spacing:1px;white-space:nowrap">⚠ MANUAL</span>`;
+    el.innerHTML = `
+      <div style="display:flex;align-items:flex-start;gap:8px;width:100%">
+        <div class="etog-icon" style="margin-top:1px">${e.icon}</div>
+        <div style="flex:1;min-width:0">
+          <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-bottom:2px">
+            <div class="etog-name">${e.name}</div>${badge}
+          </div>
+          <div class="etog-sub" style="margin-bottom:5px">${e.sub}</div>
+          <div style="font-size:11px;color:var(--muted);line-height:1.5;font-family:'DM Sans',sans-serif">${e.info}</div>
+        </div>
+        <div class="sw" style="margin-top:2px;flex-shrink:0"></div>
+      </div>`;
+    el.onclick = () => { e.on = !e.on; el.classList.toggle('on', e.on); updateGoSub(); };
+    g.appendChild(el);
+  });
+}
+
+// ── Trip summary ──────────────────────────────────────────
+function updateSummary() {
+  const el = document.getElementById('tripSummary');
+  if (!cityBlocks.length) {
+    el.innerHTML = 'Add cities above to build your itinerary';
+    return;
+  }
+
+  const totalNights = cityBlocks.reduce((s, b) => s + b.nights, 0);
+  let cursor = checkinDate;
+  let lines = [];
+
+  cityBlocks.forEach((block, i) => {
+    const city = cityById(block.cityId);
+    const cin  = cursor;
+    const cout = addDays(cin, block.nights);
+    lines.push(`<span style="color:var(--ink)">${city.icon} ${city.name}</span> · ${pretty(cin)} → ${pretty(cout)} · ${block.nights}n`);
+    cursor = cout;
+  });
+
+  const warnColor = totalNights > 17 || totalNights < 12 ? 'ts-warning' : 'ts-total';
+  el.innerHTML = lines.join('<br>') +
+    `<br><span class="${warnColor}">Total: ${totalNights} nights${totalNights > 17 ? ' ⚠ over 17' : totalNights < 12 ? ' ⚠ under 12' : ' ✓'}</span>`;
+}
+
+// ── Go count ──────────────────────────────────────────────
+function updateGoSub() {
+  const engs = ENGINES.filter(e => e.on).length;
+  const n = cityBlocks.length * engs;
+  document.getElementById('goSub').textContent = n
+    ? `${n} link${n !== 1 ? 's' : ''} across ${cityBlocks.length} cit${cityBlocks.length !== 1 ? 'ies' : 'y'}`
+    : 'add cities above';
+}
+
+// ── Generate results ──────────────────────────────────────
+function go() {
+  if (!cityBlocks.length) { alert('Add at least one city to search.'); return; }
+  const engs = ENGINES.filter(e => e.on);
+  if (!engs.length) { alert('Enable at least one search engine.'); return; }
+
+  const panel = document.getElementById('results');
+  let cursor = checkinDate;
+  let totalLinks = 0;
+
+  // Build checkin note
+  let noteLines = [];
+  cityBlocks.forEach(block => {
+    const city = cityById(block.cityId);
+    const cin  = cursor;
+    const cout = addDays(cin, block.nights);
+    noteLines.push(`${city.icon} <b>${city.name}</b> · Check-in ${pretty(cin)}, Check-out ${pretty(cout)} · ${block.nights} nights`);
+    cursor = cout;
+  });
+
+  let html = `
+    <div class="checkin-note">
+      ${noteLines.join('<br>')}
+    </div>
+    <div class="sort-row">
+      <span class="sort-lbl">Results sorted</span>
+      <button class="stab active">💷 Cheapest first</button>
+      <span class="result-count" id="linkCount"></span>
+    </div>
+  `;
+
+  cursor = checkinDate;
+  cityBlocks.forEach((block, idx) => {
+    const city = cityById(block.cityId);
+    const cin  = cursor;
+    const cout = addDays(cin, block.nights);
+    cursor = cout;
+
+    const amenityTags = [
+      amenities.pool  ? '<span class="amenity-tag tag-pool">🏊 Pool</span>'   : '',
+      amenities.onsen ? '<span class="amenity-tag tag-onsen">♨️ Onsen</span>' : '',
+    ].filter(Boolean).join(' ');
+
+    html += `
+      <div class="city-group">
+        <div class="city-group-header">
+          <span class="cgh-number">STOP ${idx + 1}</span>
+          <span class="cgh-city">${city.icon} ${city.name}</span>
+          <span class="cgh-nights">${block.nights} nights</span>
+          <div class="cgh-amenities">${amenityTags}</div>
+          <span class="cgh-checkin">${pretty(cin)} → ${pretty(cout)}</span>
+        </div>
+    `;
+
+    engs.forEach((eng, ei) => {
+      const url = eng.url(city, cin, cout, amenities);
+      totalLinks++;
+      const statusBadge = eng.status === 'full'
+        ? `<span class="badge" style="background:rgba(74,222,128,.12);color:#4ade80">✓ pre-filled</span>`
+        : `<span class="badge" style="background:rgba(232,184,75,.1);color:var(--gold)">⚠ enter dates manually</span>`;
+      const meta = eng.status === 'full'
+        ? `${pretty(cin)} → ${pretty(cout)} · 1 room · 2 adults · 2 children (11, 7)${amenities.pool || amenities.onsen ? ' · ' + [amenities.pool?'pool':'',amenities.onsen?'onsen':''].filter(Boolean).join(' + ') : ''}`
+        : `Opens ${eng.name} — search for ${city.name}, Japan · enter dates on site`;
+
+      html += `
+        <div class="rrow">
+          <div class="rrow-icon">${eng.icon}</div>
+          <div class="rrow-body">
+            <div class="rrow-top">
+              <span class="badge b-eng">${eng.name}</span>
+              ${statusBadge}
+            </div>
+            <div class="rrow-name">${city.name} hotels · ${eng.status === 'full' ? block.nights + ' nights' : 'set dates on site'}</div>
+            <div class="rrow-meta">${meta}</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:4px;line-height:1.4">${eng.info}</div>
+          </div>
+          <a class="open-btn" href="${url}" target="_blank" rel="noopener">${eng.status === 'full' ? 'Search ↗' : 'Open ↗'}</a>
+        </div>
+      `;
+    });
+
+    html += `</div>`;
+  });
+
+  panel.innerHTML = html;
+  document.getElementById('linkCount').textContent = `${totalLinks} links`;
+  panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ── Init ──────────────────────────────────────────────────
+renderCheckin();
+renderAddButtons();
+renderEngines();
+updateGoSub();
+
+// Default itinerary to get people started
+addCity('tokyo');
+addCity('kyoto');
+addCity('osaka');
+</script>
+</body>
+</html>
