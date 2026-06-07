@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Japan · Family Activities</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:      #0e0e0e;
+  --surface: #161616;
+  --raised:  #1e1e1e;
+  --border:  #2a2a2a;
+  --border2: #3a3a3a;
+  --ink:     #efefef;
+  --muted:   #777;
+  --dim:     #333;
+  --orange:  #ff5a1f;
+  --teal:    #00c4a0;
+  --purple:  #a78bfa;
+  --gold:    #e8b84b;
+  --green:   #4ade80;
+  --pink:    #f472b6;
+  --red:     #f87171;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* ── Nav ── */
+.nav {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+}
+.nav-link {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+  padding: 14px 16px;
+  border-bottom: 2px solid transparent;
+  transition: all .15s;
+}
+.nav-link:hover { color: var(--ink); }
+.nav-link.active { color: var(--orange); border-bottom-color: var(--orange); }
+
+/* ── Hero ── */
+.hero {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 36px 28px 28px;
+}
+.hero-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--purple);
+  margin-bottom: 8px;
+}
+.hero-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(48px, 11vw, 96px);
+  line-height: 0.92;
+  color: var(--ink);
+}
+.hero-title .outline {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--purple);
+}
+.hero-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 14px;
+}
+.chip {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 99px;
+  padding: 3px 10px;
+  background: var(--raised);
+}
+.chip b { color: var(--ink); font-weight: 500; }
+
+/* ── Filter bar ── */
+.filter-bar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 24px;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  backdrop-filter: blur(10px);
+}
+.filter-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 1px;
+  margin-right: 4px;
+}
+.ftab {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--muted);
+  background: none;
+  cursor: pointer;
+  transition: all .15s;
+  user-select: none;
+}
+.ftab:hover { color: var(--ink); border-color: var(--border2); }
+.ftab.active { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
+/* ── Main ── */
+.main { max-width: 960px; margin: 0 auto; padding: 32px 24px 80px; }
+
+/* ── City section ── */
+.city-section { margin-bottom: 52px; }
+
+.city-header {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--border);
+}
+.city-icon { font-size: 28px; line-height: 1; }
+.city-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 36px;
+  letter-spacing: 1px;
+  color: var(--ink);
+  line-height: 1;
+}
+.city-tagline {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  margin-left: auto;
+  text-align: right;
+  line-height: 1.4;
+}
+
+/* ── Activity grid ── */
+.activity-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+}
+
+/* ── Activity card ── */
+.act-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: border-color .15s, transform .15s;
+  display: flex;
+  flex-direction: column;
+}
+.act-card:hover { border-color: var(--border2); transform: translateY(-2px); }
+
+.act-card-header {
+  padding: 14px 16px 10px;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.act-emoji { font-size: 28px; flex-shrink: 0; line-height: 1; margin-top: 2px; }
+.act-title-block { flex: 1; min-width: 0; }
+.act-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
+  line-height: 1.3;
+  margin-bottom: 4px;
+}
+.act-tags { display: flex; gap: 4px; flex-wrap: wrap; }
+.act-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+.tag-must    { background: rgba(244,114,182,.12); color: var(--pink); }
+.tag-kids    { background: rgba(74,222,128,.12);  color: var(--green); }
+.tag-thrill  { background: rgba(255,90,31,.12);   color: var(--orange); }
+.tag-culture { background: rgba(167,139,250,.12); color: var(--purple); }
+.tag-sport   { background: rgba(232,184,75,.12);  color: var(--gold); }
+.tag-art     { background: rgba(0,196,160,.12);   color: var(--teal); }
+.tag-nature  { background: rgba(59,130,246,.12);  color: #60a5fa; }
+.tag-free    { background: rgba(74,222,128,.08);  color: var(--green); border: 1px solid rgba(74,222,128,.2); }
+
+.act-body {
+  padding: 0 16px 12px;
+  flex: 1;
+}
+.act-desc {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.55;
+  margin-bottom: 10px;
+}
+.act-desc b { color: var(--ink); font-weight: 500; }
+
+/* Booking urgency */
+.act-urgency {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  padding: 5px 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+.urgency-high   { background: rgba(248,113,113,.1); color: var(--red); border-left: 2px solid var(--red); }
+.urgency-med    { background: rgba(232,184,75,.08); color: var(--gold); border-left: 2px solid var(--gold); }
+.urgency-low    { background: rgba(74,222,128,.06); color: var(--green); border-left: 2px solid var(--green); }
+.urgency-walkin { background: rgba(119,119,119,.1); color: var(--muted); border-left: 2px solid var(--dim); }
+
+/* Price hint */
+.act-price {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+.act-price span { color: var(--ink); }
+
+/* Booking links */
+.act-links {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 10px 16px 14px;
+  border-top: 1px solid var(--border);
+  background: var(--raised);
+}
+
+.book-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  text-decoration: none;
+  background: var(--bg);
+  transition: all .15s;
+}
+.book-link:hover { border-color: var(--purple); background: rgba(167,139,250,.05); }
+.book-link.primary { border-color: var(--purple); background: rgba(167,139,250,.06); }
+.book-link.primary:hover { background: rgba(167,139,250,.12); }
+
+.bl-icon { font-size: 14px; flex-shrink: 0; }
+.bl-body { flex: 1; min-width: 0; }
+.bl-name { font-size: 12px; font-weight: 500; color: var(--ink); }
+.bl-sub  { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--muted); margin-top: 1px; }
+.bl-arrow { font-size: 11px; color: var(--muted); flex-shrink: 0; }
+.book-link:hover .bl-arrow { color: var(--purple); }
+
+/* No-book note */
+.no-book {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  padding: 8px 10px;
+  background: var(--bg);
+  border-radius: 5px;
+  border: 1px solid var(--border);
+  line-height: 1.5;
+}
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<div class="nav">
+  <a class="nav-link" href="index.html">✈ Flights</a>
+  <a class="nav-link" href="hotels.html">🏨 Hotels</a>
+  <a class="nav-link active" href="activities.html">🎡 Activities</a>
+</div>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-tag">🎡 Family Activities · Japan Tour Guide</div>
+  <div class="hero-title">THINGS<br><span class="outline">TO DO</span></div>
+  <div class="hero-chips">
+    <div class="chip">👨‍👩‍👧‍👦 Family of <b>4</b></div>
+    <div class="chip">🧒 Children <b>11 &amp; 7</b></div>
+    <div class="chip">📅 <b>March–April 2027</b></div>
+    <div class="chip">🌸 Cherry blossom season</div>
+  </div>
+</div>
+
+<!-- Filter bar -->
+<div class="filter-bar">
+  <span class="filter-label">Filter</span>
+  <button class="ftab active" onclick="filterActs('all',this)">All</button>
+  <button class="ftab" onclick="filterActs('kids',this)">👶 Kids</button>
+  <button class="ftab" onclick="filterActs('must',this)">⭐ Must-do</button>
+  <button class="ftab" onclick="filterActs('art',this)">🎨 Art</button>
+  <button class="ftab" onclick="filterActs('sport',this)">🏟 Sport</button>
+  <button class="ftab" onclick="filterActs('thrill',this)">🎢 Thrill</button>
+  <button class="ftab" onclick="filterActs('culture',this)">⛩ Culture</button>
+  <button class="ftab" onclick="filterActs('free',this)">🆓 Free</button>
+</div>
+
+<!-- Main content -->
+<div class="main" id="main"></div>
+
+<script>
+const CITIES = [
+  {
+    id: 'tokyo',
+    name: 'Tokyo',
+    icon: '🗼',
+    tagline: 'Capital city · 3–7 days\nKantō region',
+    activities: [
+      {
+        id: 'skytree',
+        emoji: '🗼',
+        name: 'Tokyo Skytree',
+        tags: ['must','kids'],
+        desc: 'Japan\'s tallest structure at <b>634m</b>. Observation decks at 350m (Tembo Deck) and 450m (Tembo Galleria). On clear days you can see Mt Fuji. <b>Book in advance</b> — on-site tickets cost ¥500 extra per person and queues can be long. Under-5s free.',
+        price: 'From ¥2,100 adults · ¥950 ages 4–12',
+        urgency: { level:'med', text:'⚠ Book 1–2 weeks ahead for timed entry, especially weekends' },
+        links: [
+          { icon:'🏠', name:'Official Site', sub:'Direct booking · best price', url:'https://en.tokyo-skytree.jp/ticket/', primary:true },
+          { icon:'🟠', name:'Klook', sub:'Instant e-ticket · easy for UK visitors', url:'https://www.klook.com/activity/41352-tokyo-skytree/' },
+          { icon:'🎫', name:'GetYourGuide', sub:'Free cancellation options', url:'https://www.getyourguide.com/tokyo-l23/tokyo-skytree-observation-deck-entry-t396407/' },
+        ]
+      },
+      {
+        id: 'shibuya-sky',
+        emoji: '🌇',
+        name: 'Shibuya Sky',
+        tags: ['must','thrill'],
+        desc: '<b>Open-air</b> observation deck at 229m atop Shibuya Scramble Square. Standing above the world\'s busiest crossing. Hammocks, glass floors, and unobstructed 360° views. <b>Sunset slots sell out within 2 minutes</b> when they drop at midnight JST, 14 days ahead.',
+        price: '¥2,700 before 3pm · ¥3,400 after 3pm',
+        urgency: { level:'high', text:'🔴 Sunset slots sell out fast — set an alarm for midnight JST, 14 days before your visit' },
+        links: [
+          { icon:'🏠', name:'Official Site', sub:'Shibuya Scramble Square · timed entry', url:'https://www.shibuya-scramble-square.com/sky/en/ticket/', primary:true },
+          { icon:'🟠', name:'Klook', sub:'E-ticket delivery', url:'https://www.klook.com/activity/70672-shibuya-sky-tokyo/' },
+          { icon:'🎫', name:'KKday', sub:'Alternative booking platform', url:'https://www.kkday.com/en/product/133300' },
+        ]
+      },
+      {
+        id: 'teamlab-planets',
+        emoji: '🌊',
+        name: 'teamLab Planets',
+        tags: ['must','art','kids'],
+        desc: 'Walk <b>barefoot through water</b> into vast immersive digital art spaces. Floating flower gardens, infinite crystal universes. Incredible for kids and adults. Based in Toyosu. Sister venue teamLab Borderless is at Azabudai Hills. Both need advance tickets.',
+        price: 'From ¥3,200 adults · ¥2,000 ages 4–12 · under 3 free',
+        urgency: { level:'high', text:'🔴 Book as early as possible — weekends sell out weeks ahead' },
+        links: [
+          { icon:'🏠', name:'Official Ticket Store', sub:'teamLabPlanets.dmm.com · direct booking', url:'https://teamlabplanets.dmm.com/en', primary:true },
+          { icon:'🟠', name:'Klook', sub:'Instant e-ticket', url:'https://www.klook.com/activity/25300-teamlab-planets-toyosu-tokyo-ticket/' },
+          { icon:'🎫', name:'GetYourGuide', sub:'Free cancellation', url:'https://www.getyourguide.com/teamlab-planets-tokyo-l112322/' },
+        ]
+      },
+      {
+        id: 'teamlab-borderless',
+        emoji: '🎨',
+        name: 'teamLab Borderless',
+        tags: ['art','must'],
+        desc: 'Art flows <b>between rooms</b> — no walls, no maps, just light and movement. Recently relocated to Azabudai Hills (newer, bigger). A different experience to Planets — if you can only do one with kids, Planets wins for the water walk spectacle.',
+        price: 'From ¥3,800 adults · ¥2,000 ages 4–12',
+        urgency: { level:'high', text:'🔴 Book well in advance · very popular post-relocation' },
+        links: [
+          { icon:'🏠', name:'Official Tickets', sub:'teamlab.art · direct booking', url:'https://www.teamlab.art/e/borderless-azabudaihills/', primary:true },
+          { icon:'🟠', name:'Klook', sub:'Bundle options available', url:'https://www.klook.com/activity/20707-teamlab-borderless-admission-ticket-tokyo/' },
+        ]
+      },
+      {
+        id: 'disneysea',
+        emoji: '🌊',
+        name: 'Tokyo DisneySea',
+        tags: ['must','kids','thrill'],
+        desc: '<b>Unique in the world</b> — no other DisneySea exists. Nautical themes, seven ports of call, and the new Fantasy Springs area. Bigger thrills than Disneyland next door. At <b>March/April (cherry blossom)</b> it\'s peak season — book as early as possible, tickets open 2 months ahead.',
+        price: 'From ¥7,900–¥10,900 per person (price varies by date)',
+        urgency: { level:'high', text:'🔴 Peak season in late March/early April — buy the moment tickets open, 2 months ahead at 2pm JST' },
+        links: [
+          { icon:'🏠', name:'Tokyo Disney Resort', sub:'Official site · direct booking', url:'https://www.tokyodisneyresort.jp/en/ticket/index.html', primary:true },
+          { icon:'🎫', name:'GetYourGuide', sub:'Often has availability when official is sold out', url:'https://www.getyourguide.com/tokyo-l23/tokyo-disneysea-1-day-ticket-t395168/' },
+          { icon:'🟠', name:'Klook', sub:'E-ticket · instant delivery', url:'https://www.klook.com/activity/695-tokyo-disney-resort-1-day-pass-tokyo/' },
+        ]
+      },
+      {
+        id: 'ghibli',
+        emoji: '🐱',
+        name: 'Ghibli Museum',
+        tags: ['must','kids','culture','art'],
+        desc: 'Miyazaki\'s magical museum in Mitaka — life-sized Catbus, original film cells, rooftop garden robot. <b>Notoriously hard to book.</b> Tickets go on sale on the <b>10th of each month at 10am JST</b> for the following month and sell out in seconds. For March 2027 visit, attempt on 10 Feb 2027.',
+        price: '¥1,000 adults · ¥700 ages 13–18 · ¥400 ages 7–12 · ¥100 ages 4–6',
+        urgency: { level:'high', text:'🔴 Extremely hard to get · set alarms for 10am JST on 10th Feb 2027 · try Lawson Ticket and Klook simultaneously' },
+        links: [
+          { icon:'🏠', name:'Lawson Ticket', sub:'Official overseas booking · opens 10th of month', url:'https://l-tike.com/ghibli-en/', primary:true },
+          { icon:'🟠', name:'Klook', sub:'Tour packages including Ghibli tickets · more reliable', url:'https://www.klook.com/activity/2843-ghibli-museum-tokyo/' },
+          { icon:'🎫', name:'GetYourGuide', sub:'Guided tour option with ticket included', url:'https://www.getyourguide.com/tokyo-l23/ghibli-museum-ticket-t58861/' },
+        ]
+      },
+      {
+        id: 'harry-potter',
+        emoji: '⚡',
+        name: 'Harry Potter Studio Tokyo',
+        tags: ['kids','culture'],
+        desc: 'Warner Bros. Studio Tour opened 2023 in Toshimaen. Walk-through sets from the films — Diagon Alley, Hogwarts Great Hall, Forbidden Forest. Unlike the London version, <b>all narration is in Japanese only</b> but it\'s mostly visual so still great for kids.',
+        price: '¥6,300 adults · ¥3,800 ages 4–17',
+        urgency: { level:'med', text:'⚠ Book 2–4 weeks ahead · sells out on weekends' },
+        links: [
+          { icon:'🏠', name:'Official Site', sub:'wbstudiotour.jp · direct booking', url:'https://www.wbstudiotour.jp/en/', primary:true },
+          { icon:'🟠', name:'Klook', sub:'E-ticket · instant confirmation', url:'https://www.klook.com/activity/84374-warner-bros-studio-tour-tokyo-making-harry-potter/' },
+        ]
+      },
+      {
+        id: 'boat-race-tokyo',
+        emoji: '🚤',
+        name: 'Kyōtei Boat Racing',
+        tags: ['sport','culture'],
+        desc: '<b>Japan\'s unique powerboat gambling sport</b> — six hydroplanes race 3 laps around a 600m course. Three venues in Tokyo: <b>Edogawa</b> (best for families, river setting), Heiwajima, and Tamagawa. General admission is <b>free</b> or ¥100 — one of the best-value unique experiences in Japan. You can place small bets (¥100 minimum) or just watch.',
+        price: 'Free general admission or ¥100 · betting from ¥100',
+        urgency: { level:'walkin', text:'✓ Walk-in only · no booking needed · check race schedule first at boatrace.jp' },
+        links: [
+          { icon:'🏠', name:'Boat Race Edogawa', sub:'Official site · check race schedule', url:'https://www.boatrace-edogawa.jp/', primary:true },
+          { icon:'📅', name:'Race Schedule', sub:'boatrace.jp · all 24 venues', url:'https://www.boatrace.jp/owpc/pc/site/shiteijo/index' },
+        ]
+      },
+      {
+        id: 'tokyo-dome',
+        emoji: '⚾',
+        name: 'Tokyo Dome Baseball',
+        tags: ['sport','kids'],
+        desc: 'Catch the <b>Yomiuri Giants</b> — Japan\'s most famous baseball team — at the iconic Tokyo Dome. Late March is the start of the NPB season, so timing is perfect. <b>Incredibly family-friendly</b>: bento boxes, beer, cheerleading squads, trumpet sections. A completely different experience to UK sport.',
+        price: 'From ¥1,900 outfield · ¥3,000–5,000 for lower seats',
+        urgency: { level:'med', text:'⚠ Book 1–3 weeks ahead · popular games sell fast' },
+        links: [
+          { icon:'🏠', name:'Tokyo Dome Official', sub:'Giants ticket booking', url:'https://www.tokyo-dome.co.jp/en/giants/', primary:true },
+          { icon:'🟠', name:'Klook', sub:'Pre-booked tickets with English support', url:'https://www.klook.com/activity/22618-yomiuri-giants-baseball-match-ticket-tokyo/' },
+          { icon:'🎫', name:'Voyagin', sub:'Official ticket reseller', url:'https://www.govoyagin.com/activities/japan-tokyo/tokyo-yomiuri-giants-baseball-game/4135' },
+        ]
+      },
+      {
+        id: 'akihabara',
+        emoji: '🕹️',
+        name: 'Akihabara Electric Town',
+        tags: ['kids','culture'],
+        desc: 'Tokyo\'s legendary electronics and anime district — multi-floor gaming arcades, retro game shops, maid cafes, anime merchandise. Kids will love the <b>arcade floors</b> (UFO catchers, rhythm games). Free to explore, spend what you like. Easily half a day.',
+        price: 'Free to explore · arcades from ¥100/game',
+        urgency: { level:'walkin', text:'✓ No booking needed · just show up · best on weekends when it\'s buzzing' },
+        links: [
+          { icon:'📍', name:'Explore Akihabara', sub:'Google Maps guide', url:'https://maps.app.goo.gl/akihabara', primary:true },
+          { icon:'🎮', name:'Super Potato Retro Games', sub:'Famous 6-floor retro gaming shop', url:'https://maps.app.goo.gl/superpotato' },
+        ]
+      },
+      {
+        id: 'asakusa',
+        emoji: '⛩️',
+        name: 'Senso-ji & Asakusa',
+        tags: ['culture','free','kids'],
+        desc: 'Tokyo\'s oldest temple and most visited site. Walk through the <b>Nakamise shopping street</b> for snacks (try ningyo-yaki fish cakes and melon bread), explore the temple grounds. Free to enter. Combine with <b>a short walk to Tokyo Skytree</b>. Best in the morning before crowds arrive.',
+        price: 'Free · snacks from ¥200',
+        urgency: { level:'walkin', text:'✓ No booking · arrive before 9am for photos without crowds' },
+        links: [
+          { icon:'📍', name:'Senso-ji Temple', sub:'Official information', url:'https://www.senso-ji.jp/english/', primary:true },
+        ]
+      },
+    ]
+  },
+  {
+    id: 'osaka',
+    name: 'Osaka',
+    icon: '🏯',
+    tagline: 'Food city · 2–4 days\nKansai region',
+    activities: [
+      {
+        id: 'usj',
+        emoji: '🎢',
+        name: 'Universal Studios Japan',
+        tags: ['must','kids','thrill'],
+        desc: 'Home to <b>Super Nintendo World</b> (Mario, Donkey Kong) and The Wizarding World of Harry Potter. Nintendo World requires a separate <b>timed entry ticket</b> — either buy an Area Timed Entry combo, or get a free numbered ticket on the day via the USJ app (not guaranteed). Huge park, full day minimum.',
+        price: 'From ¥8,600 adults · ¥5,600 under-12s · Nintendo World entry extra',
+        urgency: { level:'high', text:'🔴 Late March is school holidays in Japan · book as soon as tickets open (noon, 3rd of month for 2 months ahead) · Nintendo World timed entry sells out by 9am' },
+        links: [
+          { icon:'🏠', name:'Official USJ Site', sub:'universalstudiosjapan.com · direct booking', url:'https://www.universalstudiosjapan.com/en/plan/ticket/', primary:true },
+          { icon:'🟠', name:'Klook', sub:'Studio Pass + Nintendo World combo available', url:'https://www.klook.com/activity/2247-universal-studios-japan-ticket-osaka/' },
+          { icon:'📦', name:'KKday', sub:'USJ + Nintendo World guaranteed entry bundle', url:'https://www.kkday.com/en/product/2247-universal-studios-japan-ticket-osaka' },
+        ]
+      },
+      {
+        id: 'osaka-baseball',
+        emoji: '⚾',
+        name: 'Osaka Baseball (Orix Buffaloes)',
+        tags: ['sport','kids'],
+        desc: 'The <b>Orix Buffaloes</b> play at Kyocera Dome Osaka. Late March marks the NPB season opener — electric atmosphere. Japanese baseball is highly theatrical: coordinated chants, trumpets, cheerleaders. Buy a <b>bento box</b> at the stadium. Kids will love the energy.',
+        price: 'From ¥1,700 outfield · ¥2,500–5,000 reserved',
+        urgency: { level:'med', text:'⚠ Check NPB schedule · opening games sell fast' },
+        links: [
+          { icon:'🏠', name:'Orix Buffaloes Tickets', sub:'Official ticket site', url:'https://www.orix-buffaloes.co.jp/ticket/', primary:true },
+          { icon:'🟠', name:'Klook', sub:'English-friendly booking', url:'https://www.klook.com/en-GB/search?query=orix+buffaloes+osaka+baseball' },
+        ]
+      },
+      {
+        id: 'osaka-castle',
+        emoji: '🏯',
+        name: 'Osaka Castle',
+        tags: ['culture','kids'],
+        desc: 'Iconic 16th-century castle with museum inside. <b>Cherry blossoms surround the castle in late March</b> — one of the best blossom spots in Japan. The inner park is free; pay to enter the tower museum. Great family photo spot. Combine with Nishinomaru Garden for blossom viewing.',
+        price: '¥600 adults · under-15 free',
+        urgency: { level:'walkin', text:'✓ No advance booking · just show up · get there early for blossom photos without crowds' },
+        links: [
+          { icon:'🏠', name:'Official Osaka Castle', sub:'osakacasle.net · visitor info', url:'https://www.osakacastle.net/english/', primary:true },
+        ]
+      },
+      {
+        id: 'dotonbori',
+        emoji: '🦀',
+        name: 'Dotonbori Food Walk',
+        tags: ['culture','kids','free'],
+        desc: 'Osaka\'s famous neon-lit canal street — the <b>food capital of Japan</b>. Try takoyaki (octopus balls), okonomiyaki (savoury pancakes), kushikatsu (fried skewers). The giant <b>Glico Running Man</b> sign is a must-photo. Kids love the atmosphere and the food. Evening is best when neon lights up.',
+        price: 'Free to explore · food from ¥200',
+        urgency: { level:'walkin', text:'✓ No booking · just walk and eat · busiest at sunset and evening' },
+        links: [
+          { icon:'📍', name:'Dotonbori Map', sub:'Google Maps', url:'https://maps.app.goo.gl/dotonbori', primary:true },
+        ]
+      },
+      {
+        id: 'teamlab-osaka',
+        emoji: '🌿',
+        name: 'teamLab Botanical Garden Osaka',
+        tags: ['art','kids'],
+        desc: 'Digital art installations installed <b>within a real botanical garden</b> at night — plants, flowers, and trees become luminous interactive art. Different experience from Tokyo teamLab. Only open after dark. Beautiful and memorable for kids.',
+        price: 'From ¥1,800 adults · ¥600 ages 4–12',
+        urgency: { level:'med', text:'⚠ Book 1–2 weeks ahead · evening slots fill up' },
+        links: [
+          { icon:'🏠', name:'Official Tickets', sub:'teamlab.art · direct booking', url:'https://www.teamlab.art/e/botanicalgarden-osaka/', primary:true },
+          { icon:'🟠', name:'Klook', sub:'E-ticket available', url:'https://www.klook.com/en-GB/search?query=teamlab+botanical+garden+osaka' },
+        ]
+      },
+    ]
+  },
+  {
+    id: 'kyoto',
+    name: 'Kyoto',
+    icon: '⛩️',
+    tagline: 'Ancient capital · 2–3 days\nKansai region',
+    activities: [
+      {
+        id: 'fushimi-inari',
+        emoji: '⛩️',
+        name: 'Fushimi Inari Shrine',
+        tags: ['must','culture','free','kids'],
+        desc: '<b>Thousands of orange torii gates</b> winding up a mountain — one of Japan\'s most iconic sights. Free to enter at any time. The full hike takes 2–3 hours but you can turn back whenever. <b>Arrive before 8am</b> to photograph the lower gates without crowds. The upper sections are quieter all day.',
+        price: 'Free',
+        urgency: { level:'walkin', text:'✓ No booking · open 24/7 · early morning strongly recommended for photos' },
+        links: [
+          { icon:'🏠', name:'Official Info', sub:'inari.jp · visitor information', url:'http://inari.jp/en/', primary:true },
+        ]
+      },
+      {
+        id: 'arashiyama',
+        emoji: '🎋',
+        name: 'Arashiyama Bamboo Grove',
+        tags: ['must','culture','free','nature'],
+        desc: 'Walk through a towering bamboo forest on the outskirts of Kyoto. Free and breathtaking. Combine with the <b>Tenryu-ji temple garden</b> (¥500) and the monkey park (¥600 adults). <b>Go early morning</b> — it\'s one of the most photographed spots in Japan and gets very crowded by 10am.',
+        price: 'Bamboo grove free · Monkey Park ¥600 adults · ¥300 kids',
+        urgency: { level:'walkin', text:'✓ No booking · arrive before 8am for empty paths' },
+        links: [
+          { icon:'🐒', name:'Iwatayama Monkey Park', sub:'arashiyamamonkeypark.com · info', url:'https://www.arashiyamamonkeypark.com/en', primary:true },
+        ]
+      },
+      {
+        id: 'nishiki-market',
+        emoji: '🍡',
+        name: 'Nishiki Market',
+        tags: ['culture','food','kids'],
+        desc: 'The <b>"Kitchen of Kyoto"</b> — a narrow 400m covered market packed with stalls selling pickles, tofu donuts, grilled skewers, fresh mochi and matcha everything. Great for grazing lunch. Kids love the variety and the energy.',
+        price: 'Free to enter · food from ¥200',
+        urgency: { level:'walkin', text:'✓ No booking · open daily · most stalls open 10am–6pm' },
+        links: [
+          { icon:'📍', name:'Nishiki Market Info', sub:'kyoto-nishiki.or.jp', url:'https://www.kyoto-nishiki.or.jp/en/', primary:true },
+        ]
+      },
+    ]
+  },
+  {
+    id: 'hakone',
+    name: 'Hakone / Mt Fuji',
+    icon: '🗻',
+    tagline: 'Onsen · Fuji views · 1–2 days\nKantō region',
+    activities: [
+      {
+        id: 'fuji-view',
+        emoji: '🗻',
+        name: 'Mt Fuji Viewing',
+        tags: ['must','nature'],
+        desc: 'Hakone is the <b>best base for Fuji views</b> — Lake Ashi with Fuji reflected in the water is iconic. Take the <b>Hakone Ropeway</b> over volcanic valleys with Fuji views, then the <b>Hakone cruise boat</b> on Lake Ashi. Late March can have clear days but also cloud — best views in morning.',
+        price: 'Hakone Ropeway ¥1,000 one-way · Lake Ashi cruise ¥1,200',
+        urgency: { level:'low', text:'✓ Book Hakone Free Pass for unlimited transport — covers ropeway, cruise, bus and more' },
+        links: [
+          { icon:'🏠', name:'Hakone Free Pass', sub:'odakyu.jp · covers all Hakone transport', url:'https://www.odakyu.jp/english/passes/hakone/', primary:true },
+          { icon:'🟠', name:'Klook Hakone Pass', sub:'Convenient online purchase', url:'https://www.klook.com/en-GB/search?query=hakone+free+pass' },
+        ]
+      },
+      {
+        id: 'onsen',
+        emoji: '♨️',
+        name: 'Onsen Hot Spring Bath',
+        tags: ['must','culture'],
+        desc: 'Hakone sits on volcanic land with natural hot springs everywhere. Staying at a <b>ryokan with private onsen</b> is one of the best Japan experiences for families — private baths so no public nudity rules to navigate with kids. Alternatively, the <b>Hakone Yunessun</b> is a water park with swimsuit-friendly onsen pools, great for children.',
+        price: 'Ryokan onsen included in room · Yunessun from ¥2,900 adults · ¥1,700 under-12',
+        urgency: { level:'med', text:'⚠ Book ryokan onsen rooms early — premium Hakone stays sell out months ahead at peak season' },
+        links: [
+          { icon:'💦', name:'Hakone Yunessun', sub:'Water park onsen · perfect for kids', url:'https://www.yunessun.com/en/', primary:true },
+          { icon:'🟠', name:'Klook Yunessun', sub:'Ticket booking', url:'https://www.klook.com/en-GB/search?query=hakone+yunessun' },
+        ]
+      },
+    ]
+  },
+  {
+    id: 'nagano',
+    name: 'Nagano',
+    icon: '🎿',
+    tagline: 'Mountains · temples · 1–2 days\nChūbu region',
+    activities: [
+      {
+        id: 'zenkoji',
+        emoji: '🏯',
+        name: 'Zenko-ji Temple',
+        tags: ['culture','free'],
+        desc: 'One of Japan\'s most important Buddhist temples, housing a <b>hidden Buddha</b> seen only once every 7 years. The morning ceremony at 5:30am with monks is atmospheric. The dark underground <b>Binzuru touch-healing ceremony</b> inside the main hall is memorable for kids — literally pitch black.',
+        price: 'Free · main hall ¥500',
+        urgency: { level:'walkin', text:'✓ No booking · dawn ceremony at 5:30am is the highlight' },
+        links: [
+          { icon:'🏠', name:'Zenko-ji Info', sub:'zenkoji.jp', url:'https://www.zenkoji.jp/en/', primary:true },
+        ]
+      },
+      {
+        id: 'snow-monkeys',
+        emoji: '🐒',
+        name: 'Snow Monkey Park (Jigokudani)',
+        tags: ['must','nature','kids'],
+        desc: 'Wild Japanese macaques (<b>snow monkeys</b>) bathing in outdoor hot spring pools surrounded by forest. One of the world\'s most iconic wildlife experiences. A 30-minute train + 30-minute walk from Nagano. Late March — snow may still be around, making it magical. Worth the trip.',
+        price: '¥800 adults · ¥400 under-12',
+        urgency: { level:'walkin', text:'✓ No booking · check trail conditions in late March · snow makes it even better' },
+        links: [
+          { icon:'🏠', name:'Jigokudani Park', sub:'jigokudani-yaenkoen.co.jp', url:'https://www.jigokudani-yaenkoen.co.jp/en/', primary:true },
+          { icon:'🟠', name:'Klook Day Trip', sub:'From Tokyo or Nagano with guide', url:'https://www.klook.com/activity/78298-shiga-kogen-jigokudani-monkey-park-join-one-day-bus-tour/' },
+        ]
+      },
+    ]
+  },
+  {
+    id: 'general',
+    name: 'Anywhere in Japan',
+    icon: '🇯🇵',
+    tagline: 'Essentials for the whole trip',
+    activities: [
+      {
+        id: 'jr-pass',
+        emoji: '🚄',
+        name: 'JR Pass (Shinkansen)',
+        tags: ['must'],
+        desc: 'The <b>Japan Rail Pass</b> gives unlimited Shinkansen travel for 7, 14, or 21 days. For a family covering Tokyo → Kyoto → Osaka with side trips, the <b>14-day pass</b> is likely best value. <b>Must be bought before arriving in Japan</b> — order online and collect at airport or a JR office. Children 6–11 pay half price.',
+        price: '14-day: ~£430 adults · ~£215 ages 6–11 · under 6 free',
+        urgency: { level:'high', text:'🔴 Must purchase before arriving in Japan · order at least 2 weeks before departure for delivery' },
+        links: [
+          { icon:'🏠', name:'Official JR Pass', sub:'japanrailpass.net · order online', url:'https://japanrailpass.net/en/', primary:true },
+          { icon:'🟠', name:'Klook JR Pass', sub:'Instant e-voucher · collect in Japan', url:'https://www.klook.com/en-GB/transport/rail-passes/' },
+          { icon:'🎫', name:'Japan Experience', sub:'UK-based · fast delivery', url:'https://www.japan-experience.com/rail-passes/japan-rail-pass' },
+        ]
+      },
+      {
+        id: 'sumo',
+        emoji: '🏋️',
+        name: 'Sumo Tournament',
+        tags: ['sport','culture','must'],
+        desc: 'Grand Sumo tournaments happen 6 times a year — the <b>Spring Basho is in Osaka in mid-March</b> (Edion Arena Osaka). Watching a full day of sumo is a uniquely Japanese experience — kids love the pageantry and the sheer size of the wrestlers. Afternoon bouts feature the top-ranked wrestlers.',
+        price: 'From ¥2,200 unreserved · ¥8,500+ reserved box',
+        urgency: { level:'med', text:'⚠ March Spring Basho in Osaka · tickets go on sale ~2 months ahead · box seats sell fast' },
+        links: [
+          { icon:'🏠', name:'Japan Sumo Association', sub:'sumo.or.jp/En · official tickets', url:'https://www.sumo.or.jp/En/ticket/', primary:true },
+          { icon:'🟠', name:'Klook Sumo Tickets', sub:'English booking support', url:'https://www.klook.com/activity/144735-march-sumo-tournament-tour-in-osaka-with-chair-seat-tickets/' },
+          { icon:'🎫', name:'GetYourGuide', sub:'Premium box seats', url:'https://www.getyourguide.com/osaka-l3688/sumo-tournament-t58910/' },
+        ]
+      },
+      {
+        id: 'tokyo-subway',
+        emoji: '🚇',
+        name: 'Tokyo Subway Pass',
+        tags: ['must'],
+        desc: 'A <b>24/48/72-hour unlimited pass</b> for all Tokyo Metro and Toei Subway lines covers almost everywhere tourists want to go. Much cheaper than paying per ride. At ¥600/day it pays for itself with 2 journeys. <b>Get Suica IC cards</b> on top for buses, convenience stores and vending machines.',
+        price: '24h ¥600 · 48h ¥1,200 · 72h ¥1,500',
+        urgency: { level:'low', text:'✓ Buy on arrival at any major station or online via Klook' },
+        links: [
+          { icon:'🟠', name:'Klook Subway Pass', sub:'Pick up at Tokyo station', url:'https://www.klook.com/en-GB/search?query=tokyo+subway+pass', primary:true },
+          { icon:'🏠', name:'Tokyo Metro Info', sub:'tokyometro.jp · routes and maps', url:'https://www.tokyometro.jp/en/ticket/travel/index.html' },
+        ]
+      },
+      {
+        id: 'shirakawa',
+        emoji: '❄️',
+        name: 'Shirakawa-go Village',
+        tags: ['culture','nature'],
+        desc: '<b>UNESCO World Heritage</b> mountain village with iconic A-frame thatched farmhouses. A 2-hour bus from Nagoya or Kanazawa. Magical in late winter — snow may still cap the roofs in late March. A wonderful half-day detour between cities.',
+        price: 'Village free · heritage farmhouses ¥300–600 entry',
+        urgency: { level:'walkin', text:'✓ No booking needed for village · just show up' },
+        links: [
+          { icon:'🏠', name:'Shirakawa-go Info', sub:'shirakawa-go.gr.jp', url:'https://shirakawa-go.gr.jp/en/', primary:true },
+        ]
+      },
+    ]
+  }
+];
+
+// ── Render ────────────────────────────────────────────────
+let activeFilter = 'all';
+
+function filterActs(tag, btn) {
+  activeFilter = tag;
+  document.querySelectorAll('.ftab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderAll();
+}
+
+function renderAll() {
+  const main = document.getElementById('main');
+  let html = '';
+
+  CITIES.forEach(city => {
+    const visible = city.activities.filter(a =>
+      activeFilter === 'all' || a.tags.includes(activeFilter)
+    );
+    if (!visible.length) return;
+
+    html += `
+      <div class="city-section" data-city="${city.id}">
+        <div class="city-header">
+          <span class="city-icon">${city.icon}</span>
+          <span class="city-name">${city.name}</span>
+          <span class="city-tagline">${city.tagline.replace('\n','<br>')}</span>
+        </div>
+        <div class="activity-grid">
+          ${visible.map(act => renderCard(act)).join('')}
+        </div>
+      </div>
+    `;
+  });
+
+  if (!html) {
+    html = `<div style="text-align:center;padding:60px 20px;color:var(--muted);font-family:'DM Mono',monospace;font-size:12px">No activities match this filter.</div>`;
+  }
+
+  main.innerHTML = html;
+}
+
+function renderCard(act) {
+  const tagHtml = act.tags.map(t =>
+    `<span class="act-tag tag-${t}">${tagLabel(t)}</span>`
+  ).join('');
+
+  const urgencyHtml = `<div class="act-urgency urgency-${act.urgency.level}">${act.urgency.text}</div>`;
+
+  const priceHtml = `<div class="act-price">💷 <span>${act.price}</span></div>`;
+
+  const linksHtml = act.links.map(l => `
+    <a class="book-link${l.primary ? ' primary' : ''}" href="${l.url}" target="_blank" rel="noopener">
+      <span class="bl-icon">${l.icon}</span>
+      <span class="bl-body">
+        <span class="bl-name">${l.name}</span>
+        <span class="bl-sub">${l.sub}</span>
+      </span>
+      <span class="bl-arrow">↗</span>
+    </a>
+  `).join('');
+
+  return `
+    <div class="act-card" data-tags="${act.tags.join(' ')}">
+      <div class="act-card-header">
+        <span class="act-emoji">${act.emoji}</span>
+        <div class="act-title-block">
+          <div class="act-name">${act.name}</div>
+          <div class="act-tags">${tagHtml}</div>
+        </div>
+      </div>
+      <div class="act-body">
+        <div class="act-desc">${act.desc}</div>
+        ${urgencyHtml}
+        ${priceHtml}
+      </div>
+      <div class="act-links">${linksHtml}</div>
+    </div>
+  `;
+}
+
+function tagLabel(t) {
+  const labels = {
+    must:'⭐ Must-do', kids:'👶 Kids', thrill:'🎢 Thrill', culture:'⛩ Culture',
+    sport:'🏟 Sport', art:'🎨 Art', nature:'🌿 Nature', free:'🆓 Free', food:'🍜 Food'
+  };
+  return labels[t] || t;
+}
+
+// Init
+renderAll();
+</script>
+</body>
+</html>
