@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MAN → Japan · Family Flights</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:      #0e0e0e;
+  --surface: #161616;
+  --raised:  #1e1e1e;
+  --border:  #2a2a2a;
+  --border2: #3a3a3a;
+  --ink:     #efefef;
+  --muted:   #777;
+  --dim:     #333;
+  --orange:  #ff5a1f;
+  --teal:    #00c4a0;
+  --purple:  #a78bfa;
+  --gold:    #e8b84b;
+  --green:   #4ade80;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.hero {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 36px 28px 28px;
+}
+.hero-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--orange);
+  margin-bottom: 8px;
+}
+.hero-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(48px, 11vw, 96px);
+  line-height: 0.92;
+  color: var(--ink);
+}
+.hero-title .outline {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--orange);
+}
+.hero-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 14px;
+}
+.chip {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 99px;
+  padding: 3px 10px;
+  background: var(--raised);
+}
+.chip b { color: var(--ink); font-weight: 500; }
+.page-body { display: flex; align-items: flex-start; }
+.sidebar {
+  width: 290px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--border);
+  background: var(--surface);
+  padding: 18px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: sticky;
+  top: 0;
+  max-height: 100vh;
+  overflow-y: auto;
+}
+@media (max-width: 680px) {
+  .page-body { flex-direction: column; }
+  .sidebar { width: 100%; position: static; max-height: none; border-right: none; border-bottom: 1px solid var(--border); }
+}
+.sec-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.sec-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.mode-tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--raised);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 3px;
+}
+.mtab {
+  flex: 1;
+  text-align: center;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 7px 4px;
+  border-radius: 5px;
+  cursor: pointer;
+  color: var(--muted);
+  transition: all .15s;
+  user-select: none;
+  line-height: 1.3;
+}
+.mtab:hover { color: var(--ink); }
+.mtab.active { background: var(--orange); color: #000; font-weight: 500; }
+.date-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+}
+.dpill {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--raised);
+  padding: 7px 6px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color .15s, background .15s;
+  user-select: none;
+}
+.dpill:hover { border-color: var(--border2); }
+.dpill.sel { border-color: var(--teal); background: rgba(0,196,160,.08); }
+.dp-dow { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+.dpill.sel .dp-dow { color: var(--teal); }
+.dp-date { font-size: 12px; font-weight: 500; margin-top: 1px; }
+.dp-note { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--gold); margin-top: 1px; min-height: 12px; }
+.nights-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
+.nights-big { font-family: 'Bebas Neue', sans-serif; font-size: 36px; line-height: 1; color: var(--orange); }
+.nights-sub { font-size: 11px; color: var(--muted); }
+.ret-label { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--teal); text-align: right; }
+input[type=range] {
+  width: 100%; appearance: none; height: 3px;
+  background: var(--dim); border-radius: 3px; outline: none; cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  appearance: none; width: 18px; height: 18px; border-radius: 50%;
+  background: var(--orange); border: 3px solid var(--bg); box-shadow: 0 0 0 1px var(--orange);
+}
+.engine-list { display: flex; flex-direction: column; gap: 4px; }
+.etog {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px;
+  background: var(--raised); cursor: pointer;
+  transition: border-color .15s, background .15s; user-select: none;
+}
+.etog:hover { border-color: var(--border2); }
+.etog.on { border-color: var(--teal); background: rgba(0,196,160,.07); }
+.etog-icon { width: 18px; text-align: center; font-size: 14px; flex-shrink: 0; }
+.etog-name { font-size: 12px; font-weight: 500; flex: 1; }
+.etog-sub  { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--muted); }
+.sw {
+  width: 28px; height: 16px; border-radius: 8px; background: var(--dim);
+  position: relative; flex-shrink: 0; transition: background .2s;
+}
+.sw::after {
+  content: ''; position: absolute; top: 2px; left: 2px;
+  width: 12px; height: 12px; border-radius: 50%; background: var(--muted);
+  transition: transform .2s, background .2s;
+}
+.etog.on .sw { background: var(--teal); }
+.etog.on .sw::after { transform: translateX(12px); background: #fff; }
+.split-builder { display: flex; flex-direction: column; gap: 10px; }
+.split-route-viz {
+  background: var(--raised);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 15px;
+  letter-spacing: 1px;
+}
+.srv-airport { text-align: center; flex: 1; }
+.srv-code { font-size: 22px; line-height: 1; }
+.srv-name { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--muted); letter-spacing: 1px; font-weight: 400; margin-top: 2px; }
+.srv-arrow { color: var(--orange); font-size: 18px; flex-shrink: 0; }
+.srv-arrow.return { color: var(--teal); }
+.split-leg {
+  background: var(--raised);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+.split-leg-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.leg-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-weight: 500;
+}
+.leg-out { background: rgba(255,90,31,.15); color: var(--orange); }
+.leg-ret { background: rgba(0,196,160,.15); color: var(--teal); }
+.leg-title { font-size: 12px; font-weight: 500; flex: 1; }
+.airport-picker {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+}
+.ap-btn {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 7px 8px;
+  cursor: pointer;
+  transition: all .15s;
+  text-align: left;
+  user-select: none;
+}
+.ap-btn:hover { border-color: var(--border2); }
+.ap-btn.sel-out { border-color: var(--orange); background: rgba(255,90,31,.08); }
+.ap-btn.sel-ret { border-color: var(--teal); background: rgba(0,196,160,.08); }
+.ap-code { font-family: 'Bebas Neue', sans-serif; font-size: 18px; line-height: 1; color: var(--muted); }
+.ap-btn.sel-out .ap-code { color: var(--orange); }
+.ap-btn.sel-ret .ap-code { color: var(--teal); }
+.ap-name { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--muted); margin-top: 1px; }
+.split-engine-row { display: flex; gap: 4px; flex-wrap: wrap; }
+.split-eng-btn {
+  flex: 1;
+  min-width: 60px;
+  background: var(--raised);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 6px 6px;
+  text-align: center;
+  cursor: pointer;
+  transition: all .15s;
+  user-select: none;
+}
+.split-eng-btn:hover { border-color: var(--border2); }
+.split-eng-btn.on { border-color: var(--purple); background: rgba(167,139,250,.08); }
+.split-eng-btn .se-icon { font-size: 14px; }
+.split-eng-btn .se-name { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--muted); display: block; margin-top: 2px; }
+.split-eng-btn.on .se-name { color: var(--purple); }
+.split-info {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  line-height: 1.5;
+  padding: 8px 10px;
+  background: var(--raised);
+  border-radius: 6px;
+  border-left: 2px solid var(--gold);
+}
+.split-info b { color: var(--gold); }
+.go-btn {
+  width: 100%; background: var(--orange); color: #000;
+  border: none; font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px; letter-spacing: 2px; padding: 14px 16px;
+  border-radius: 7px; cursor: pointer; transition: background .15s, transform .15s;
+}
+.go-btn:hover { background: #ff7040; transform: translateY(-1px); }
+.go-btn:active { transform: translateY(0); }
+.go-sub {
+  display: block; font-family: 'DM Mono', monospace; font-size: 10px;
+  font-weight: 400; letter-spacing: 1px; color: rgba(0,0,0,0.5); margin-top: 2px;
+}
+.results { flex: 1; min-width: 0; padding: 18px 18px 60px; }
+.empty { padding: 70px 20px; text-align: center; color: var(--muted); }
+.empty-icon { font-size: 44px; margin-bottom: 10px; }
+.empty-title { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 2px; color: var(--dim); margin-bottom: 6px; }
+.empty-hint { font-family: 'DM Mono', monospace; font-size: 11px; line-height: 1.7; }
+.sort-row {
+  display: flex; align-items: center; gap: 6px; margin-bottom: 14px; flex-wrap: wrap;
+}
+.sort-lbl { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); letter-spacing: 1px; margin-right: 2px; }
+.result-count { margin-left: auto; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); }
+.grp-head {
+  font-family: 'Bebas Neue', sans-serif; font-size: 15px; letter-spacing: 2px;
+  color: var(--muted); border-bottom: 1px solid var(--border);
+  padding: 14px 0 5px; margin-bottom: 2px;
+  display: flex; align-items: baseline; gap: 10px;
+}
+.gh-main { color: var(--ink); }
+.gh-ret  { color: var(--teal); font-size: 12px; font-family: 'DM Mono', monospace; font-weight: 400; }
+.gh-n    { margin-left: auto; font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 400; }
+.rrow {
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 0; border-bottom: 1px solid var(--border);
+}
+.rrow:last-child { border-bottom: none; }
+.rrow-icon { width: 24px; text-align: center; font-size: 15px; flex-shrink: 0; }
+.rrow-body { flex: 1; min-width: 0; }
+.rrow-top { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 2px; }
+.badge {
+  font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 1px;
+  padding: 2px 6px; border-radius: 3px; text-transform: uppercase;
+}
+.b-eng   { background: var(--dim); color: var(--muted); }
+.b-TYO   { background: rgba(59,130,246,.15); color: #60a5fa; }
+.b-KIX   { background: rgba(168,85,247,.15); color: #c084fc; }
+.rrow-route { font-size: 14px; font-weight: 500; }
+.rrow-route .arr { color: var(--orange); margin: 0 4px; }
+.rrow-meta { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); margin-top: 2px; }
+.open-btn {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: var(--raised); border: 1px solid var(--border); color: var(--ink);
+  text-decoration: none; font-family: 'DM Mono', monospace; font-size: 10px;
+  letter-spacing: 1px; padding: 7px 11px; border-radius: 6px;
+  white-space: nowrap; flex-shrink: 0; transition: all .15s;
+}
+.open-btn:hover { background: var(--orange); border-color: var(--orange); color: #000; }
+.split-pair-card {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin: 8px 0;
+  overflow: hidden;
+}
+.split-pair-header {
+  background: rgba(232,184,75,.07);
+  border-bottom: 1px solid var(--border);
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.sph-route {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 14px;
+  letter-spacing: 1px;
+  flex: 1;
+}
+.sph-note { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--gold); }
+.split-pair-legs { display: flex; flex-direction: column; }
+.split-leg-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; border-bottom: 1px solid var(--border);
+}
+.split-leg-row:last-child { border-bottom: none; }
+.slr-leg-badge {
+  font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 1px;
+  text-transform: uppercase; padding: 2px 7px; border-radius: 3px;
+  white-space: nowrap; flex-shrink: 0; font-weight: 500;
+}
+.slr-info { flex: 1; min-width: 0; }
+.slr-route { font-size: 13px; font-weight: 500; }
+.slr-meta { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); margin-top: 1px; }
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="hero-tag">✈ Family Flight Finder · 4 Passengers</div>
+  <div class="hero-title">MAN<br><span class="outline">→ JAPAN</span></div>
+  <div class="hero-chips">
+    <div class="chip">👨‍👩‍👧‍👦 2 Adults · 2 Children <b>(11 &amp; 7)</b></div>
+    <div class="chip">📅 Around <b>27 Mar 2027</b></div>
+    <div class="chip">💺 <b>Economy · GBP</b></div>
+  </div>
+</div>
+<div class="page-body">
+  <div class="sidebar">
+    <div>
+      <div class="sec-label">Search Mode</div>
+      <div class="mode-tabs">
+        <div class="mtab active" data-mode="return" onclick="setMode(this)">Return<br>Ticket</div>
+        <div class="mtab" data-mode="split" onclick="setMode(this)">Split<br>Tickets</div>
+      </div>
+    </div>
+    <div>
+      <div class="sec-label">Outbound Date</div>
+      <div class="date-grid" id="dateGrid"></div>
+    </div>
+    <div>
+      <div class="sec-label">Trip Length</div>
+      <div class="nights-header">
+        <div>
+          <div class="nights-big" id="nightsBig">14</div>
+          <div class="nights-sub">nights</div>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--muted);text-align:right">Return date</div>
+          <div class="ret-label" id="retLabel">—</div>
+        </div>
+      </div>
+      <input type="range" id="nightsSlider" min="12" max="17" value="14" oninput="updateNights()">
+      <div style="display:flex;justify-content:space-between;font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);margin-top:4px">
+        <span>12n</span><span>17n</span>
+      </div>
+    </div>
+    <div id="returnSection">
+      <div class="sec-label">Search Engines</div>
+      <div class="engine-list" id="engineList"></div>
+    </div>
+    <div id="splitSection" style="display:none">
+      <div class="sec-label">Split Ticket Builder</div>
+      <div class="split-builder">
+        <div class="split-route-viz" id="splitViz"></div>
+        <div class="split-leg">
+          <div class="split-leg-header">
+            <span class="leg-badge leg-out">Leg 1 — OUT</span>
+            <span class="leg-title">MAN → fly into</span>
+          </div>
+          <div class="airport-picker" id="outAirportPicker">
+            <div class="ap-btn sel-out" data-ap="TYO" onclick="pickAirport('out','TYO',this)"><div class="ap-code">TYO</div><div class="ap-name">Tokyo All</div></div>
+            <div class="ap-btn" data-ap="NRT" onclick="pickAirport('out','NRT',this)"><div class="ap-code">NRT</div><div class="ap-name">Narita</div></div>
+            <div class="ap-btn" data-ap="HND" onclick="pickAirport('out','HND',this)"><div class="ap-code">HND</div><div class="ap-name">Haneda</div></div>
+            <div class="ap-btn" data-ap="KIX" onclick="pickAirport('out','KIX',this)"><div class="ap-code">KIX</div><div class="ap-name">Osaka</div></div>
+          </div>
+        </div>
+        <div class="split-leg">
+          <div class="split-leg-header">
+            <span class="leg-badge leg-ret">Leg 2 — BACK</span>
+            <span class="leg-title">fly home from</span>
+          </div>
+          <div class="airport-picker" id="retAirportPicker">
+            <div class="ap-btn" data-ap="TYO" onclick="pickAirport('ret','TYO',this)"><div class="ap-code">TYO</div><div class="ap-name">Tokyo All</div></div>
+            <div class="ap-btn" data-ap="NRT" onclick="pickAirport('ret','NRT',this)"><div class="ap-code">NRT</div><div class="ap-name">Narita</div></div>
+            <div class="ap-btn" data-ap="HND" onclick="pickAirport('ret','HND',this)"><div class="ap-code">HND</div><div class="ap-name">Haneda</div></div>
+            <div class="ap-btn sel-ret" data-ap="KIX" onclick="pickAirport('ret','KIX',this)"><div class="ap-code">KIX</div><div class="ap-name">Osaka</div></div>
+          </div>
+        </div>
+        <div>
+          <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Search on</div>
+          <div class="split-engine-row" id="splitEngineRow"></div>
+        </div>
+        <div class="split-info"><b>Open jaw tip:</b> Choose different airports for Leg 1 and Leg 2 — e.g. fly <b>into TYO</b>, out of <b>KIX</b> after exploring both cities. Often £150–£300 cheaper than flying same airport both ways.</div>
+      </div>
+    </div>
+    <button class="go-btn" onclick="go()">SEARCH NOW<span class="go-sub" id="goSub">select dates above</span></button>
+  </div>
+  <div class="results" id="results">
+    <div class="empty" id="emptyState">
+      <div class="empty-icon">🗾</div>
+      <div class="empty-title">Ready to Search</div>
+      <div id="emptyRoute" style="font-family:'DM Mono',monospace;font-size:12px;color:var(--teal);margin:8px 0 4px;letter-spacing:1px;"></div>
+      <div id="emptyDates" style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:12px;"></div>
+      <div class="empty-hint">
+        <b style="color:var(--ink)">Return Ticket</b> — one booking, same airport both ways<br>
+        <b style="color:var(--gold)">Split Tickets</b> — two one-ways, can use different airports<br>
+        <b style="color:var(--teal)">Open Jaw</b> — fly into Tokyo, home from Osaka (cheapest)
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+const AIRPORTS={TYO:{sky:'tyoa',name:'Tokyo',full:'Tokyo (NRT/HND)'},NRT:{sky:'nrt',name:'Narita',full:'Tokyo Narita'},HND:{sky:'hnd',name:'Haneda',full:'Tokyo Haneda'},KIX:{sky:'kix',name:'Osaka',full:'Osaka Kansai'}};
+const RET_ENGINES=[{id:'sky',name:'Skyscanner',icon:'🌐',sub:'Best child pricing',on:true,url:(o,r,d)=>`https://www.skyscanner.net/transport/flights/man/${AIRPORTS[d].sky}/${f(o)}/${f(r)}/?adults=2&children=2&adultsv2=2&childrenv2=11%7C7&infants=0&cabinclass=economy&currency=GBP&locale=en-GB`},{id:'goo',name:'Google Flights',icon:'🔍',sub:'Price calendar',on:true,url:(o,r,d)=>`https://www.google.com/travel/flights?q=flights+from+Manchester+to+${d}+on+${o}+return+${r}+2+adults+2+children+economy`},{id:'kay',name:'Kayak',icon:'🛶',sub:'Date heatmap',on:true,url:(o,r,d)=>`https://www.kayak.co.uk/flights/MAN-${d}/${o}/${r}/2adults/children-y11-y7?sort=price_a`},{id:'exp',name:'Expedia',icon:'🏷',sub:'Package deals',on:false,url:(o,r,d)=>`https://www.expedia.co.uk/Flights-Search?trip=roundtrip&leg1=from%3AMAN%2Cto%3A${d}%2Cdeparture%3A${o}TANYT&leg2=from%3A${d}%2Cto%3AMAN%2Cdeparture%3A${r}TANYT&passengers=adults%3A2%2Cchildren%3A2%2Cinfantinlap%3AN&options=cabinclass%3Aeconomy&mode=search`},{id:'mom',name:'Momondo',icon:'🧭',sub:'Unusual routings',on:false,url:(o,r,d)=>{const city=d==='KIX'?'Osaka-KIX':'Tokyo-TYO';return `https://www.momondo.co.uk/flight-search/Manchester-MAN/${city}/${f(o)}/${f(r)}?adults=2&children=2%2C11%2C7&infants=0&cabinClass=Economy&currency=GBP`;}}];
+const SPLIT_ENGINES=[{id:'sky',name:'Sky',icon:'🌐',on:true,urlOut:(o,ap)=>`https://www.skyscanner.net/transport/flights/man/${AIRPORTS[ap].sky}/${f(o)}/?adults=2&children=2&adultsv2=2&childrenv2=11%7C7&infants=0&cabinclass=economy&currency=GBP&locale=en-GB`,urlRet:(r,ap)=>`https://www.skyscanner.net/transport/flights/${AIRPORTS[ap].sky}/man/${f(r)}/?adults=2&children=2&adultsv2=2&childrenv2=11%7C7&infants=0&cabinclass=economy&currency=GBP&locale=en-GB`},{id:'goo',name:'Google',icon:'🔍',on:true,urlOut:(o,ap)=>`https://www.google.com/travel/flights?q=one+way+flights+Manchester+to+${ap}+on+${o}+2+adults+2+children+economy`,urlRet:(r,ap)=>`https://www.google.com/travel/flights?q=one+way+flights+${ap}+to+Manchester+on+${r}+2+adults+2+children+economy`},{id:'kay',name:'Kayak',icon:'🛶',on:false,urlOut:(o,ap)=>`https://www.kayak.co.uk/flights/MAN-${ap}/${o}/2adults/children-y11-y7?sort=price_a&t=w`,urlRet:(r,ap)=>`https://www.kayak.co.uk/flights/${ap}-MAN/${r}/2adults/children-y11-y7?sort=price_a&t=w`}];
+const DATES=[{iso:'2027-03-25',dow:'Thu',d:'25 Mar',cheap:false},{iso:'2027-03-26',dow:'Fri',d:'26 Mar',cheap:false},{iso:'2027-03-27',dow:'Sat',d:'27 Mar',cheap:false},{iso:'2027-03-28',dow:'Sun',d:'28 Mar',cheap:false},{iso:'2027-03-29',dow:'Mon',d:'29 Mar',cheap:false},{iso:'2027-03-30',dow:'Tue',d:'30 Mar',cheap:true},{iso:'2027-03-31',dow:'Wed',d:'31 Mar',cheap:true},{iso:'2027-04-01',dow:'Thu',d:'1 Apr',cheap:false},{iso:'2027-04-02',dow:'Fri',d:'2 Apr',cheap:false}];
+let mode='return',selDates=new Set(['2027-03-30','2027-03-31']),nights=14,outAirport='TYO',retAirport='KIX',links=[];
+const f=iso=>iso.replace(/-/g,'');
+function addDays(iso,n){const d=new Date(iso+'T12:00:00Z');d.setUTCDate(d.getUTCDate()+n);return d.toISOString().slice(0,10)}
+function pretty(iso){const d=new Date(iso+'T12:00:00Z');const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];const mons=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];return `${days[d.getUTCDay()]} ${d.getUTCDate()} ${mons[d.getUTCMonth()]}`}
+function setMode(el){document.querySelectorAll('.mtab').forEach(t=>t.classList.remove('active'));el.classList.add('active');mode=el.dataset.mode;document.getElementById('returnSection').style.display=mode==='return'?'':'none';document.getElementById('splitSection').style.display=mode==='split'?'':'none';updateGoSub();updateEmptyState()}
+function renderDates(){const g=document.getElementById('dateGrid');g.innerHTML='';DATES.forEach(d=>{const el=document.createElement('div');el.className='dpill'+(selDates.has(d.iso)?' sel':'');el.innerHTML=`<div class="dp-dow">${d.dow}</div><div class="dp-date">${d.d}</div><div class="dp-note">${d.cheap?'★ cheap':''}</div>`;el.onclick=()=>{selDates.has(d.iso)?selDates.delete(d.iso):selDates.add(d.iso);el.classList.toggle('sel',selDates.has(d.iso));updateGoSub();updateRet();updateEmptyState()};g.appendChild(el)})}
+function renderRetEngines(){const g=document.getElementById('engineList');g.innerHTML='';RET_ENGINES.forEach(e=>{const el=document.createElement('div');el.className='etog'+(e.on?' on':'');el.innerHTML=`<div class="etog-icon">${e.icon}</div><div style="flex:1"><div class="etog-name">${e.name}</div><div class="etog-sub">${e.sub}</div></div><div class="sw"></div>`;el.onclick=()=>{e.on=!e.on;el.classList.toggle('on',e.on);updateGoSub()};g.appendChild(el)})}
+function renderSplitEngines(){const g=document.getElementById('splitEngineRow');g.innerHTML='';SPLIT_ENGINES.forEach(e=>{const el=document.createElement('div');el.className='split-eng-btn'+(e.on?' on':'');el.innerHTML=`<div class="se-icon">${e.icon}</div><span class="se-name">${e.name}</span>`;el.onclick=()=>{e.on=!e.on;el.classList.toggle('on',e.on);updateGoSub()};g.appendChild(el)})}
+function pickAirport(leg,code,el){const container=leg==='out'?'outAirportPicker':'retAirportPicker';const cls=leg==='out'?'sel-out':'sel-ret';document.querySelectorAll(`#${container} .ap-btn`).forEach(b=>b.classList.remove(cls));el.classList.add(cls);if(leg==='out')outAirport=code;else retAirport=code;updateSplitViz();updateEmptyState()}
+function updateSplitViz(){const viz=document.getElementById('splitViz');const isOpenJaw=outAirport!==retAirport;viz.innerHTML=`<div class="srv-airport"><div class="srv-code" style="color:var(--orange)">MAN</div><div class="srv-name">Manchester</div></div><div class="srv-arrow">→</div><div class="srv-airport"><div class="srv-code" style="color:${isOpenJaw?'var(--orange)':'var(--ink)'}">${outAirport}</div><div class="srv-name">${AIRPORTS[outAirport].name}</div></div>${isOpenJaw?`<div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted)">·· explore ··</div><div class="srv-airport"><div class="srv-code" style="color:var(--teal)">${retAirport}</div><div class="srv-name">${AIRPORTS[retAirport].name}</div></div>`:''}<div class="srv-arrow return">→</div><div class="srv-airport"><div class="srv-code" style="color:var(--teal)">MAN</div><div class="srv-name">Manchester</div></div>`}
+function updateNights(){nights=+document.getElementById('nightsSlider').value;document.getElementById('nightsBig').textContent=nights;updateRet();updateEmptyState()}
+function updateRet(){const dates=[...selDates].sort();document.getElementById('retLabel').textContent=dates.length?pretty(addDays(dates[0],nights)):'—'}
+function updateGoSub(){let n=0;if(mode==='return'){n=selDates.size*RET_ENGINES.filter(e=>e.on).length*2}else{n=selDates.size*SPLIT_ENGINES.filter(e=>e.on).length*2}document.getElementById('goSub').textContent=n?`${n} link${n!==1?'s':''}`:'select dates above'}
+function go(){if(!selDates.size){alert('Select at least one outbound date.');return}links=[];if(mode==='return'){const engs=RET_ENGINES.filter(e=>e.on);if(!engs.length){alert('Enable at least one engine.');return}[...selDates].sort().forEach(out=>{const ret=addDays(out,nights);['TYO','KIX'].forEach(dc=>{engs.forEach(eng=>{links.push({type:'return',out,ret,nights,outLabel:pretty(out),retLabel:pretty(ret),engName:eng.name,engIcon:eng.icon,engSub:eng.sub,dc,url:eng.url(out,ret,dc)})})})})}else{const engs=SPLIT_ENGINES.filter(e=>e.on);if(!engs.length){alert('Enable at least one engine.');return}const isOpenJaw=outAirport!==retAirport;[...selDates].sort().forEach(out=>{const ret=addDays(out,nights);engs.forEach(eng=>{links.push({type:'split-pair',out,ret,nights,outLabel:pretty(out),retLabel:pretty(ret),outAirport,retAirport,isOpenJaw,engName:eng.name,engIcon:eng.icon,urlOut:eng.urlOut(out,outAirport),urlRet:eng.urlRet(ret,retAirport)})})})}renderResults()}
+function renderResults(){const panel=document.getElementById('results');if(!links.length){panel.innerHTML='<div class="empty"><div class="empty-title">No Results</div></div>';return}const groups={};[...links].sort((a,b)=>a.out.localeCompare(b.out)).forEach(lk=>{if(!groups[lk.out])groups[lk.out]={head:lk.outLabel,ret:lk.retLabel,items:[]};groups[lk.out].items.push(lk)});const linkCount=links.reduce((acc,lk)=>acc+(lk.type==='split-pair'?2:1),0);let html=`<div class="sort-row"><span class="sort-lbl">Grouped by date</span><span class="result-count">${links.length} ${mode==='split'?'pairs · '+linkCount+' links total':'links'}</span></div>`;Object.values(groups).forEach(grp=>{html+=`<div class="grp-head"><span class="gh-main">${grp.head}</span><span class="gh-ret">← ${grp.ret}</span><span class="gh-n">${grp.items.length} ${mode==='split'?'pair':'link'}${grp.items.length!==1?'s':''}</span></div>`;grp.items.forEach(lk=>{if(lk.type==='return'){const dcColor=lk.dc==='TYO'?'b-TYO':'b-KIX';html+=`<div class="rrow"><div class="rrow-icon">${lk.engIcon}</div><div class="rrow-body"><div class="rrow-top"><span class="badge b-eng">${lk.engName}</span><span class="badge ${dcColor}">${lk.dc}</span></div><div class="rrow-route">MAN <span class="arr">→</span> ${lk.dc} <span class="arr">→</span> MAN</div><div class="rrow-meta">${lk.outLabel} → ${lk.retLabel} · ${lk.nights}n · ${lk.engSub}</div></div><a class="open-btn" href="${lk.url}" target="_blank" rel="noopener">Open ↗</a></div>`}else{html+=`<div class="split-pair-card"><div class="split-pair-header"><div class="sph-route"><span style="color:var(--orange)">MAN</span><span class="arr" style="color:var(--orange)">→</span>${lk.outAirport}${lk.isOpenJaw?`<span style="color:var(--muted);font-size:11px;font-family:'DM Mono',monospace"> ·· </span>${lk.retAirport}`:''}<span class="arr" style="color:var(--teal)">→</span><span style="color:var(--teal)">MAN</span></div><span class="sph-note">${lk.engIcon} ${lk.engName}</span></div><div class="split-pair-legs"><div class="split-leg-row"><span class="slr-leg-badge leg-out">Leg 1 · OUT</span><div class="slr-info"><div class="slr-route">MAN → ${lk.outAirport} &nbsp;<span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)">${lk.outLabel}</span></div><div class="slr-meta">${AIRPORTS[lk.outAirport].full} · one-way · book separately</div></div><a class="open-btn" href="${lk.urlOut}" target="_blank" rel="noopener">Search ↗</a></div><div class="split-leg-row"><span class="slr-leg-badge leg-ret">Leg 2 · BACK</span><div class="slr-info"><div class="slr-route">${lk.retAirport} → MAN &nbsp;<span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)">${lk.retLabel}</span></div><div class="slr-meta">${AIRPORTS[lk.retAirport].full} · one-way · book separately</div></div><a class="open-btn" href="${lk.urlRet}" target="_blank" rel="noopener">Search ↗</a></div></div></div>`}})});panel.innerHTML=html}
+function updateEmptyState(){const routeEl=document.getElementById('emptyRoute');const datesEl=document.getElementById('emptyDates');if(!routeEl)return;if(mode==='return'){routeEl.textContent='MAN → TYO / KIX → MAN'}else{const jaw=outAirport!==retAirport;routeEl.textContent=jaw?`MAN → ${outAirport} ·· ${retAirport} → MAN  (open jaw)`: `MAN ⇄ ${outAirport}`}const sorted=[...selDates].sort();if(!sorted.length){datesEl.textContent='No dates selected'}else{const first=pretty(sorted[0]);const ret=pretty(addDays(sorted[0],nights));const extra=sorted.length>1?` + ${sorted.length-1} more date${sorted.length>2?'s':''}`:'';datesEl.textContent=`${first} → ${ret} · ${nights} nights${extra}`}}
+renderDates();renderRetEngines();renderSplitEngines();updateSplitViz();updateRet();updateGoSub();updateEmptyState();
+</script>
+</body>
+</html>
